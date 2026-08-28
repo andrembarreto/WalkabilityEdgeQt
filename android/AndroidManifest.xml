@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!--
+  Manifesto derivado do template do Qt em
+  Qt/6.11.1/android_armv7/src/android/templates/AndroidManifest.xml,
+  com as declaracoes especificas de Wear OS acrescentadas.
+
+  O atributo package= do template foi removido de proposito: ele e ignorado pelo
+  Android Gradle Plugin atual e gera aviso de build. O namespace vem da
+  propriedade QT_ANDROID_PACKAGE_NAME no CMakeLists.txt.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
+    android:versionCode="-- %%INSERT_VERSION_CODE%% --"
+    android:versionName="-- %%INSERT_VERSION_NAME%% --">
+
+    <!-- %%INSERT_PERMISSIONS -->
+    <!-- %%INSERT_FEATURES -->
+
+    <!-- Marca o APK como aplicacao de relogio. Sem esta linha o Wear OS trata o
+         app como app de telefone e o icone nao aparece no launcher do relogio. -->
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <!-- ACCESS_FINE_LOCATION e inserida automaticamente pelo androiddeployqt no
+         placeholder %%INSERT_PERMISSIONS acima, a partir de
+         Qt6Positioning_armeabi-v7a-android-dependencies.xml.
+         A grossa precisa ser declarada a mao: a partir do Android 12 (targetSdk
+         aqui e 36) um pedido de ACCESS_FINE_LOCATION so e aceito se
+         ACCESS_COARSE_LOCATION estiver declarada e for pedida no mesmo request. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Declarar ACCESS_FINE_LOCATION faz a Play Store inferir GPS como
+         requisito de hardware. Marcando como opcional, o app tambem instala em
+         relogios sem GPS proprio, que obtem a posicao do celular pareado. -->
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:name="org.qtproject.qt.android.bindings.QtApplication"
+        android:hardwareAccelerated="true"
+        android:label="-- %%INSERT_APP_NAME%% --"
+        android:icon="-- %%INSERT_APP_ICON%% --"
+        android:theme="@android:style/Theme.DeviceDefault"
+        android:enableOnBackInvokedCallback="false"
+        android:allowBackup="true"
+        android:fullBackupOnly="false">
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+
+        <!-- Declara que o app funciona sozinho, sem app companion no celular. -->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <activity
+            android:name="org.qtproject.qt.android.bindings.QtActivity"
+            android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
+            android:label="-- %%INSERT_APP_NAME%% --"
+            android:launchMode="singleTop"
+            android:screenOrientation="unspecified"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="-- %%INSERT_APP_LIB_NAME%% --" />
+
+            <meta-data
+                android:name="android.app.arguments"
+                android:value="-- %%INSERT_APP_ARGUMENTS%% --" />
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.qtprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/qtprovider_paths"/>
+        </provider>
+    </application>
+</manifest>
