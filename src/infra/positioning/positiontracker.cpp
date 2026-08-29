@@ -11,6 +11,11 @@ PositionTracker::PositionTracker(QObject *parent)
     QTimer::singleShot(0, this, &PositionTracker::handlePermission);
 }
 
+QString PositionTracker::currentPosition() const
+{
+    return m_currentPositionInfo.coordinate().toString();
+}
+
 void PositionTracker::handlePermission()
 {
     QLocationPermission permission;
@@ -47,6 +52,8 @@ void PositionTracker::startTracking()
 void PositionTracker::onPositionUpdated(const QGeoPositionInfo& info)
 {
     qDebug() << info;
+    m_currentPositionInfo = info;
+    emit currentPositionChanged();
 }
 
 void PositionTracker::onErrorOccurred(QGeoPositionInfoSource::Error error)

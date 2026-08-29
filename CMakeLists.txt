@@ -15,6 +15,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
     VERSION 1.0
     QML_FILES
         Main.qml
+        SOURCES src/infra/positioning/positiontracker.h src/infra/positioning/positiontracker.cpp
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
