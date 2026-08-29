@@ -10,11 +10,21 @@ qt_add_executable(appWalkabilityEdgeQt
     main.cpp
 )
 
+target_include_directories(appWalkabilityEdgeQt PRIVATE
+    src/presentation/journey
+)
+
 qt_add_qml_module(appWalkabilityEdgeQt
     URI WalkabilityEdgeQt
     VERSION 1.0
     QML_FILES
         Main.qml
+        src/presentation/views/home/HomeScreen.qml
+    SOURCES
+        src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
+        src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp
+        src/domain/journey/journey.h
+        src/application/utils/stopwatch.h src/application/utils/stopwatch.cpp
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
