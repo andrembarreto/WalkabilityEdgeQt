@@ -19,7 +19,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
     VERSION 1.0
     QML_FILES
         Main.qml
-        src/presentation/views/home/HomeScreen.qml
+        src/presentation/views/journey-start/JourneyStartScreen.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
         src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp

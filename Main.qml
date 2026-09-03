@@ -1,4 +1,7 @@
 import QtQuick
+import QtQuick.Controls
+
+import WalkabilityEdgeQt
 
 Window {
     id: window
@@ -24,30 +27,20 @@ Window {
     readonly property real inscribedMargin: displaySize * (1.0 - 1.0 / Math.sqrt(2.0)) / 2.0
 
     // Area util da interface. O conteudo da aplicacao entra aqui dentro.
-    Item {
-        id: safeArea
+    StackView {
+        id: stack
 
         anchors.fill: parent
         anchors.margins: window.safeMargin
-    }
+        initialItem: journeyStartScreen
 
-    // --- Auxilio de desenvolvimento: apagar ao comecar a interface. ---------
-    // Contornos das duas referencias de margem, para conferir no aparelho o que
-    // realmente cabe na tela redonda.
-    Rectangle {
-        anchors.fill: safeArea
-        color: "transparent"
-        border.color: "#3affffff"
-        border.width: 1
-        radius: width / 2
-    }
-
-    Rectangle {
-        anchors.centerIn: parent
-        width: window.displaySize - 2 * window.inscribedMargin
-        height: width
-        color: "transparent"
-        border.color: "#3a4fc3f7"
-        border.width: 1
+        Component {
+            id: journeyStartScreen
+            JourneyStartScreen {
+                onStarted: {
+                    // TODO
+                }
+            }
+        }
     }
 }
