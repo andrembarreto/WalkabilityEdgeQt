@@ -21,9 +21,9 @@ private slots:
     void update();
 
 private:
-    qint64 m_elapsedTime;
-    QElapsedTimer m_elapsedTimer;
     QTimer m_timer;
+    qint64 m_elapsedTime;
+    qint64 m_startTime;
 };
 
 #endif // STOPWATCH_H
