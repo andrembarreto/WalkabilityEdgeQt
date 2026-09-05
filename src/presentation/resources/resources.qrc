@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>icons/chevron-forward.svg</file>
+        <file>icons/chevron-backward.svg</file>
+    </qresource>
+</RCC>

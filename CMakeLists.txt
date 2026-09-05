@@ -6,6 +6,8 @@ find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Positioning)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
+set(CMAKE_AUTORCC on)
+
 qt_add_executable(appWalkabilityEdgeQt
     main.cpp
 )
@@ -20,11 +22,15 @@ qt_add_qml_module(appWalkabilityEdgeQt
     QML_FILES
         Main.qml
         src/presentation/views/journey-start/JourneyStartScreen.qml
+        src/presentation/views/journey-active/JourneyActiveScreen.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
         src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp
         src/domain/journey/journey.h
         src/application/utils/stopwatch.h src/application/utils/stopwatch.cpp
+    RESOURCES
+        src/presentation/resources/resources.qrc
+        QML_FILES src/presentation/views/journey-active/OptionSelector.qml
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia

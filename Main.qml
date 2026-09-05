@@ -36,10 +36,19 @@ Window {
 
         Component {
             id: journeyStartScreen
+
             JourneyStartScreen {
                 onStarted: {
-                    // TODO
+                    stack.push(journeyActiveScreen);
                 }
+            }
+        }
+
+        Component {
+            id: journeyActiveScreen
+
+            JourneyActiveScreen {
+
             }
         }
     }
