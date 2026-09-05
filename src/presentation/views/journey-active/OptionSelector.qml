@@ -4,10 +4,10 @@ import QtQuick.Controls
 Control {
     id: control
 
-    signal selected(option: variant)
-    required property list<variant> options
-    property int displayedIndex: 0
-    readonly property variant displayedOption: options ? options[displayedIndex] : null
+    signal selected(id: variant)
+    required property variant options
+    property int currentIndex: 0
+    readonly property variant currentOption: options ? options[currentIndex] : null
 
     contentItem: Row {
         Button {
@@ -16,7 +16,7 @@ Control {
             icon.color: "white"
             icon.width: 20
             onClicked: {
-                control.displayedIndex = (control.displayedIndex - 1 + control.options.length) % control.options.length
+                control.currentIndex = (control.currentIndex - 1 + control.options.length) % control.options.length
             }
             enabled: control.options.length > 1
             flat: true
@@ -24,7 +24,7 @@ Control {
 
         Button {
             id: buttonSelect
-            text: control.displayedOption
+            text: control.currentOption.name
         }
 
         Button {
@@ -33,7 +33,7 @@ Control {
             icon.color: "white"
             icon.width: 20
             onClicked: {
-                control.displayedIndex = (control.displayedIndex + 1) % control.options.length
+                control.currentIndex = (control.currentIndex + 1) % control.options.length
             }
             enabled: control.options.length > 1
             flat: true

@@ -8,6 +8,7 @@ Page {
     id: root
 
     signal stopped()
+    required property list<JourneyDimensionViewModel> dimensions
 
     background: null
 
@@ -16,7 +17,7 @@ Page {
         OptionSelector {
             anchors.centerIn: parent
             anchors.bottomMargin: 24
-            options: ["1", "2"]
+            options: root.dimensions
         }
 
         Column {
