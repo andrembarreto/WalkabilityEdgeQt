@@ -24,6 +24,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/views/journey-start/JourneyStartScreen.qml
         src/presentation/views/journey-active/JourneyActiveScreen.qml
         src/presentation/views/journey-active/OptionSelector.qml
+        src/presentation/views/journey-active/FinishJourneyDialog.qml
         src/presentation/views/journey-events/JourneyEventsScreen.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp

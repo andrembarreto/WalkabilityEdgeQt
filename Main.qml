@@ -54,6 +54,9 @@ Window {
                 onDimensionSelected: function(dimension) {
                     stack.push(journeyEventsScreen, { events: dimension.events });
                 }
+                onFinished: {
+                    stack.replace(journeyStartScreen);
+                }
             }
         }
 

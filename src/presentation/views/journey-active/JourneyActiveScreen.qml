@@ -7,7 +7,7 @@ import WalkabilityEdgeQt
 Page {
     id: root
 
-    signal stopped()
+    signal finished()
     signal dimensionSelected(dimension: JourneyDimensionViewModel)
     required property list<JourneyDimensionViewModel> dimensions
 
@@ -33,7 +33,7 @@ Page {
             }
 
             Button {
-                id: buttonStop
+                id: buttonFinish
                 padding: 2
 
                 contentItem: Label {
@@ -45,12 +45,12 @@ Page {
 
                 background: Rectangle {
                     color: "red"
-                    opacity: buttonStop.pressed ? 0.15 : 0
+                    opacity: buttonFinish.pressed ? 0.15 : 0
                     radius: height / 2
                 }
 
                 onClicked: {
-                    root.stopped();
+                    finishDialog.open();
                 }
             }
 
@@ -60,6 +60,18 @@ Page {
                 color: "white"
                 font.pointSize: 12
             }
+        }
+    }
+
+    FinishJourneyDialog {
+        id: finishDialog
+        anchors.centerIn: parent
+        height: parent.height
+        width: parent.width
+
+        onAccepted: {
+            JourneyViewModel.finish();
+            root.finished();
         }
     }
 
