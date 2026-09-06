@@ -8,6 +8,7 @@ Page {
     id: root
 
     signal stopped()
+    signal dimensionSelected(dimension: JourneyDimensionViewModel)
     required property list<JourneyDimensionViewModel> dimensions
 
     background: null
@@ -18,6 +19,11 @@ Page {
             anchors.centerIn: parent
             anchors.bottomMargin: 24
             options: root.dimensions
+            onSelected: function(dimensionID) {
+                const dimension = root.dimensions.find((d) => d.id === dimensionID);
+                if(dimension)
+                    root.dimensionSelected(dimension);
+            }
         }
 
         Column {

@@ -1,0 +1,22 @@
+{
+    "version": 0.1,
+    "dimensions": [
+        {
+            "id": 1,
+            "name": "Segurança",
+            "icon": "",
+            "events": [
+                { "id": 1, "name": "Evento 1" },
+                { "id": 2, "name": "Evento 2" }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "Continuidade",
+            "icon": "",
+            "events": [
+                { "id": 3, "name": "Evento 3" }
+            ]
+        }
+    ]
+}

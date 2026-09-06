@@ -1,16 +1,13 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "src/presentation/journey/journeydimensionviewmodel.h"
+#include "src/infra/data/appdata.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-    const QList<JourneyDimensionViewModel*> dimensions {
-        new JourneyDimensionViewModel("", "Opt 1", {}, JourneyDimensionViewModel::Type::T1, &app),
-        new JourneyDimensionViewModel("", "Opt 2", {}, JourneyDimensionViewModel::Type::T2, &app)
-    };
+    const auto dimensions = appdata::loadData();
 
     QQmlApplicationEngine engine;
     QObject::connect(

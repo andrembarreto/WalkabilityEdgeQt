@@ -51,6 +51,16 @@ Window {
 
             JourneyActiveScreen {
                 dimensions: window.dimensions
+                onDimensionSelected: function(dimension) {
+                    stack.push(journeyEventsScreen, { events: dimension.events });
+                }
+            }
+        }
+
+        Component {
+            id: journeyEventsScreen
+
+            JourneyEventsScreen {
             }
         }
     }

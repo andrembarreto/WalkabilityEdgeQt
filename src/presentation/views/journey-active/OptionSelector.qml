@@ -16,7 +16,7 @@ Control {
             icon.color: "white"
             icon.width: 20
             onClicked: {
-                control.currentIndex = (control.currentIndex - 1 + control.options.length) % control.options.length
+                control.currentIndex = (control.currentIndex - 1 + control.options.length) % control.options.length;
             }
             enabled: control.options.length > 1
             flat: true
@@ -25,6 +25,12 @@ Control {
         Button {
             id: buttonSelect
             text: control.currentOption.name
+            onClicked: {
+                control.selected(control.currentOption.id);
+            }
+            font.pointSize: 8
+            implicitWidth: 100
+            padding: 2
         }
 
         Button {
@@ -33,7 +39,7 @@ Control {
             icon.color: "white"
             icon.width: 20
             onClicked: {
-                control.currentIndex = (control.currentIndex + 1) % control.options.length
+                control.currentIndex = (control.currentIndex + 1) % control.options.length;
             }
             enabled: control.options.length > 1
             flat: true

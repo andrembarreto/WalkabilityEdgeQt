@@ -24,15 +24,19 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/views/journey-start/JourneyStartScreen.qml
         src/presentation/views/journey-active/JourneyActiveScreen.qml
         src/presentation/views/journey-active/OptionSelector.qml
+        src/presentation/views/journey-events/JourneyEventsScreen.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
         src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp
         src/domain/journey/journey.h
         src/application/utils/stopwatch.h src/application/utils/stopwatch.cpp
         src/presentation/journey/journeydimensionviewmodel.h
-        src/presentation/journey/journeyeventviewmodel.h src/presentation/journey/journeyeventviewmodel.cpp
+        src/presentation/journey/journeyeventviewmodel.h
+        src/infra/data/appdata.h
+        src/infra/data/appdata.cpp
     RESOURCES
         src/presentation/resources/resources.qrc
+        src/infra/data/data.qrc
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
