@@ -35,6 +35,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/journey/journeyeventviewmodel.h
         src/infra/data/appdata.h
         src/infra/data/appdata.cpp
+        src/domain/journey/ipositioningservice.h
+        src/domain/journey/position.h
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc

@@ -1,6 +1,10 @@
 #ifndef JOURNEY_H
 #define JOURNEY_H
 
+#include <vector>
+
+#include "position.h"
+
 struct Journey
 {
 public:
@@ -9,10 +13,12 @@ public:
 
     bool isActive() const { return m_isActive; }
     int elapsedTime() const { return m_elapsedTime; }
+    void addToRoute(const Position& pos) { m_route.push_back(pos); }
 
 private:
     bool m_isActive = false;
     int m_elapsedTime = 0;
+    std::vector<Position> m_route;
 };
 
 #endif // JOURNEY_H
