@@ -1,11 +1,15 @@
 #include "journeytracker.h"
 #include "src/application/utils/stopwatch.h"
 #include "src/domain/journey/ipositioningservice.h"
+#include "src/domain/journey/event.h"
 
-JourneyTracker::JourneyTracker(IPositioningService* positioningService, QObject *parent)
+JourneyTracker::JourneyTracker(
+    std::unique_ptr<IPositioningService> positioningService,
+    QObject *parent
+)
     : QObject{parent}
     , m_stopwatch(new Stopwatch(this))
-    , m_positioningService(positioningService)
+    , m_positioningService(std::move(positioningService))
 {
     connect(
         m_stopwatch, &Stopwatch::updated,
@@ -13,7 +17,7 @@ JourneyTracker::JourneyTracker(IPositioningService* positioningService, QObject 
     );
 
     connect(
-        m_positioningService, &IPositioningService::updated,
+        m_positioningService.get(), &IPositioningService::updated,
         this, &JourneyTracker::onPositionUpdated
     );
 }
@@ -46,6 +50,7 @@ void JourneyTracker::startJourney()
     emit journeyStateChanged();
     updateElapsedTime(0);
     m_stopwatch->start();
+    m_lastKnownPosition.reset();
     m_positioningService->startUpdates(1000);
 }
 
@@ -58,6 +63,15 @@ void JourneyTracker::finishJourney()
     emit journeyStateChanged();
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
+}
+
+void JourneyTracker::registerEvent(int eventID)
+{
+    if(!journeyIsActive() || !m_lastKnownPosition.has_value())
+        return;
+
+    Event newEvent{eventID, m_lastKnownPosition.value()};
+    m_journey->addToEvents(newEvent);
 }
 
 bool JourneyTracker::journeyIsActive() const

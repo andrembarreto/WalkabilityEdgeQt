@@ -5,8 +5,8 @@ using timestamp_t = long long;
 
 struct Position
 {
-    float latitude;
-    float longitude;
+    double latitude;
+    double longitude;
     timestamp_t timestamp;
 
     bool operator==(const Position& other) const

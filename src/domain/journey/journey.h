@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "position.h"
+#include "event.h"
 
 struct Journey
 {
@@ -14,11 +15,13 @@ public:
     bool isActive() const { return m_isActive; }
     int elapsedTime() const { return m_elapsedTime; }
     void addToRoute(const Position& pos) { m_route.push_back(pos); }
+    void addToEvents(const Event& event) { m_events.push_back(event); }
 
 private:
     bool m_isActive = false;
     int m_elapsedTime = 0;
     std::vector<Position> m_route;
+    std::vector<Event> m_events;
 };
 
 #endif // JOURNEY_H

@@ -19,6 +19,7 @@ public:
 
     Q_INVOKABLE void start();
     Q_INVOKABLE void finish();
+    Q_INVOKABLE void registerEvent(int eventID);
 
     bool isActive() const;
     int elapsedTime() const;

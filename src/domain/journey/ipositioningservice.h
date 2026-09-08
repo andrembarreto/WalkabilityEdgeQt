@@ -5,8 +5,6 @@
 
 #include "position.h"
 
-Q_DECLARE_METATYPE(Position)
-
 class IPositioningService : public QObject
 {
     Q_OBJECT

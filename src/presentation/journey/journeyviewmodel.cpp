@@ -1,9 +1,10 @@
 #include "journeyviewmodel.h"
 #include "src/application/journey-tracker/journeytracker.h"
+#include "src/infra/positioning/positioningservicefactory.h"
 
 JourneyViewModel::JourneyViewModel(QObject *parent)
     : QObject{parent}
-    , m_tracker(new JourneyTracker(this))
+    , m_tracker(new JourneyTracker(createService(), this))
 {
     connect(
         m_tracker, &JourneyTracker::journeyStateChanged,
@@ -24,6 +25,11 @@ void JourneyViewModel::start()
 void JourneyViewModel::finish()
 {
     m_tracker->finishJourney();
+}
+
+void JourneyViewModel::registerEvent(int eventID)
+{
+    m_tracker->registerEvent(eventID);
 }
 
 bool JourneyViewModel::isActive() const

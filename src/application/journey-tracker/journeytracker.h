@@ -14,12 +14,13 @@ class JourneyTracker : public QObject
     Q_OBJECT
 public:
     explicit JourneyTracker(
-        IPositioningService* positioningService,
+        std::unique_ptr<IPositioningService> positioningService,
         QObject *parent = nullptr
     );
 
     void startJourney();
     void finishJourney();
+    void registerEvent(int eventID);
 
     bool journeyIsActive() const;
     int elapsedTime() const;
@@ -36,7 +37,7 @@ private:
     std::optional<Journey> m_journey;
     std::optional<Position> m_lastKnownPosition;
     Stopwatch* const m_stopwatch;
-    IPositioningService* const m_positioningService;
+    std::unique_ptr<IPositioningService> m_positioningService;
 };
 
 #endif // JOURNEYTRACKER_H
