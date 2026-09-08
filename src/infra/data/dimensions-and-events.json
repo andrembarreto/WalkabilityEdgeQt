@@ -4,7 +4,7 @@
         {
             "id": 1,
             "name": "Segurança",
-            "icon": "",
+            "icon": "qrc:/resources/icons/shield.svg",
             "events": [
                 { "id": 1, "name": "Evento 1" },
                 { "id": 2, "name": "Evento 2" }
@@ -13,7 +13,7 @@
         {
             "id": 2,
             "name": "Continuidade",
-            "icon": "",
+            "icon": "qrc:/resources/icons/route.svg",
             "events": [
                 { "id": 3, "name": "Evento 3" }
             ]

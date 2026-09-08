@@ -24,13 +24,14 @@ Control {
 
         Button {
             id: buttonSelect
+            icon.source: control.currentOption.icon
             text: control.currentOption.name
+            display: Button.TextUnderIcon
+            implicitWidth: 100
+            font.pointSize: 8
             onClicked: {
                 control.selected(control.currentOption.id);
             }
-            font.pointSize: 8
-            implicitWidth: 100
-            padding: 2
         }
 
         Button {
