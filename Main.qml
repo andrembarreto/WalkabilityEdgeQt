@@ -64,6 +64,9 @@ Window {
             id: journeyEventsScreen
 
             JourneyEventsScreen {
+                onReturned: {
+                    stack.pop();
+                }
             }
         }
     }
