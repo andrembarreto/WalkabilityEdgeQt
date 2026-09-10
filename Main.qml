@@ -55,7 +55,7 @@ Window {
                     stack.push(journeyEventsScreen, { events: dimension.events });
                 }
                 onFinished: {
-                    stack.replace(journeyStartScreen);
+                    stack.replace(journeyFinishedScreen);
                 }
             }
         }
@@ -67,6 +67,14 @@ Window {
                 onReturned: {
                     stack.pop();
                 }
+            }
+        }
+
+        Component {
+            id: journeyFinishedScreen
+
+            JourneyFinishedScreen {
+
             }
         }
     }
