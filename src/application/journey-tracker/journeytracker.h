@@ -24,6 +24,7 @@ public:
 
     bool journeyIsActive() const;
     int elapsedTime() const;
+    const std::optional<Journey>& journey() const;
 
 signals:
     void journeyStateChanged();

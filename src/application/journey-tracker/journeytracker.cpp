@@ -81,5 +81,10 @@ bool JourneyTracker::journeyIsActive() const
 
 int JourneyTracker::elapsedTime() const
 {
-    return m_journey->elapsedTime();
+    return journeyIsActive() ? m_journey->elapsedTime() : 0;
+}
+
+const std::optional<Journey>& JourneyTracker::journey() const
+{
+    return m_journey;
 }
