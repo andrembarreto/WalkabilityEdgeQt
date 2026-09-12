@@ -1,5 +1,7 @@
 #include "journeyviewmodel.h"
 #include "journeydispatcherviewmodel.h"
+#include "journeyreportviewmodel.h"
+
 #include "src/application/journey-tracker/journeytracker.h"
 #include "src/infra/positioning/positioningservicefactory.h"
 
@@ -38,6 +40,13 @@ void JourneyViewModel::dispatch()
 {
     if(m_tracker->journey().has_value())
         m_dispatcher->execute(m_tracker->journey().value());
+}
+
+journeyReportViewModel JourneyViewModel::makeReport() const
+{
+    journeyReportViewModel report;
+    report.totalDistance = 10;
+    return report;
 }
 
 bool JourneyViewModel::isActive() const

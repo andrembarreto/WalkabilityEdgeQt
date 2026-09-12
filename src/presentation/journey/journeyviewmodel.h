@@ -6,6 +6,7 @@
 
 class JourneyTracker;
 class JourneyDispatcherViewModel;
+class journeyReportViewModel;
 
 class JourneyViewModel : public QObject
 {
@@ -23,6 +24,7 @@ public:
     Q_INVOKABLE void finish();
     Q_INVOKABLE void registerEvent(int eventID);
     Q_INVOKABLE void dispatch();
+    Q_INVOKABLE journeyReportViewModel makeReport() const;
 
     bool isActive() const;
     int elapsedTime() const;
