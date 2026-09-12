@@ -1,6 +1,6 @@
 #include "journeydispatcherviewmodel.h"
 #include "src/application/journey-dispatcher/journeydispatcher.h"
-#include "src/application/journey-dispatcher/journeyapi.h"
+#include "src/application/journey-dispatcher/ijourneyapi.h"
 
 #include <QJsonObject>
 #include <QPromise>
@@ -9,7 +9,7 @@
 
 namespace {
 
-class MockJourneyAPI : public QObject, public JourneyAPI
+class MockJourneyAPI : public QObject, public IJourneyAPI
 {
     Q_OBJECT
 

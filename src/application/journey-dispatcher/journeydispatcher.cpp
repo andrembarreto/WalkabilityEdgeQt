@@ -1,5 +1,5 @@
 #include "journeydispatcher.h"
-#include "journeyapi.h"
+#include "ijourneyapi.h"
 #include "journeydispatchresult.h"
 
 #include <QJsonObject>
@@ -42,7 +42,7 @@ namespace {
     }
 }
 
-JourneyDispatcher::JourneyDispatcher(JourneyAPI* api, QObject *parent)
+JourneyDispatcher::JourneyDispatcher(IJourneyAPI* api, QObject *parent)
     : QObject{parent}
     , m_api(api)
 {}

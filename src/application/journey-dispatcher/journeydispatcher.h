@@ -7,18 +7,18 @@
 #include "journeydispatchresult.h"
 #include "src/domain/journey/journey.h"
 
-class JourneyAPI;
+class IJourneyAPI;
 
 class JourneyDispatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit JourneyDispatcher(JourneyAPI* api, QObject *parent = nullptr);
+    explicit JourneyDispatcher(IJourneyAPI* api, QObject *parent = nullptr);
 
     QFuture<JourneyDispatchResult> execute(const Journey& journey);
 
 private:
-    JourneyAPI* const m_api;
+    IJourneyAPI* const m_api;
 };
 
 #endif // JOURNEYDISPATCHER_H

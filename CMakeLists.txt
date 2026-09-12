@@ -27,6 +27,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/views/journey-active/FinishJourneyDialog.qml
         src/presentation/views/journey-events/JourneyEventsScreen.qml
         src/presentation/views/journey-finished/JourneyFinishedScreen.qml
+        src/presentation/views/journey-result/JourneyResultScreen.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
         src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp
@@ -43,9 +44,10 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/domain/journey/event.h
         src/infra/positioning/positioningservice.cpp
         src/infra/positioning/positioningservicefactory.h
+        src/infra/journey-api/journeyapi.h src/infra/journey-api/journeyapi.cpp
         src/application/journey-dispatcher/journeydispatcher.h src/application/journey-dispatcher/journeydispatcher.cpp
         src/application/journey-dispatcher/journeydispatchresult.h
-        src/application/journey-dispatcher/journeyapi.h
+        src/application/journey-dispatcher/ijourneyapi.h
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc
