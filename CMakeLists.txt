@@ -35,6 +35,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/journey/journeydimensionviewmodel.h
         src/presentation/journey/journeyeventviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.h src/presentation/journey/journeydispatcherviewmodel.cpp
+        src/presentation/journey/journeyreportviewmodel.h
         src/infra/data/appdata.h
         src/infra/data/appdata.cpp
         src/domain/journey/ipositioningservice.h
@@ -44,6 +45,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/infra/positioning/positioningservicefactory.h
         src/application/journey-dispatcher/journeydispatcher.h src/application/journey-dispatcher/journeydispatcher.cpp
         src/application/journey-dispatcher/journeydispatchresult.h
+        src/application/journey-dispatcher/journeyapi.h
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc
