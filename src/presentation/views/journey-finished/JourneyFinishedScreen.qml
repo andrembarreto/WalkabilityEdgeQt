@@ -16,20 +16,12 @@ Page {
         target: JourneyViewModel.dispatcher
 
         function onSuccess() {
+            root.showMessage("Percurso salvo", Material.color(Material.LightBlue));
             root.finished();
         }
 
         function onFail(reason: string) {
-            let messageItem = messageComponent.createObject(root, {
-                message: reason,
-                backgroundColor: Material.color(Material.Red)
-            });
-            if(messageItem !== null) {
-                messageItem.open();
-            }
-            else {
-                console.log("Error showing popup message for ", reason);
-            }
+            root.showMessage(reason, Material.color(Material.Red));
         }
     }
 
@@ -110,6 +102,19 @@ Page {
                     Layout.alignment: Qt.AlignHCenter
                 }
             }
+        }
+    }
+
+    function showMessage(message: string, backgroundColor: string) {
+        let messageItem = messageComponent.createObject(Overlay.overlay, {
+            message: message,
+            backgroundColor: backgroundColor
+        });
+        if(messageItem !== null) {
+            messageItem.open();
+        }
+        else {
+            console.log("Error showing popup message for ", message);
         }
     }
 
