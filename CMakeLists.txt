@@ -8,6 +8,16 @@ qt_standard_project_setup(REQUIRES 6.8)
 
 set(CMAKE_AUTORCC on)
 
+set(INI_EXAMPLE "${CMAKE_CURRENT_SOURCE_DIR}/config/app.ini.example")
+set(INI_REAL "${CMAKE_CURRENT_SOURCE_DIR}/config/app.ini")
+
+if(EXISTS "${INI_EXAMPLE}")
+    if(NOT EXISTS "${INI_REAL}")
+        message(STATUS "Criando app.ini a partir do example...")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E copy "${INI_EXAMPLE}" "${INI_REAL}")
+    endif()
+endif()
+
 qt_add_executable(appWalkabilityEdgeQt
     main.cpp
 )
@@ -51,6 +61,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc
+        config/config.qrc
+
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
