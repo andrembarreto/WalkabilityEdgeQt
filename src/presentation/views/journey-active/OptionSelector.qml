@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Effects
 
 Control {
     id: control
@@ -12,6 +13,7 @@ Control {
     contentItem: Row {
         Button {
             id: buttonPrevious
+            anchors.verticalCenter: parent.verticalCenter
             icon.source: "qrc:/resources/icons/chevron-backward.svg"
             icon.color: "white"
             icon.width: 20
@@ -24,11 +26,37 @@ Control {
 
         Button {
             id: buttonSelect
-            icon.source: control.currentOption.icon
-            text: control.currentOption.name
-            display: Button.TextUnderIcon
+            anchors.verticalCenter: parent.verticalCenter
             implicitWidth: 100
-            font.pointSize: 8
+
+            contentItem: Column {
+                anchors.horizontalCenter: parent.horizontalCenter
+                spacing: parent.spacing
+
+                Item {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: iconOption.height; width: iconOption.width
+
+                    Image {
+                        id: iconOption
+                        fillMode: Image.PreserveAspectFit
+                        source: control.currentOption.icon
+                        sourceSize.height: 24
+                    }
+                    MultiEffect {
+                        anchors.fill: iconOption
+                        source: iconOption
+                        colorization: 1.0
+                        colorizationColor: "black"
+                    }
+                }
+                Label {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: control.currentOption.name
+                    font.pointSize: 8
+                    color: "black"
+                }
+            }
             onClicked: {
                 control.selected(control.currentOption.id);
             }
@@ -36,6 +64,7 @@ Control {
 
         Button {
             id: buttonNext
+            anchors.verticalCenter: parent.verticalCenter
             icon.source: "qrc:/resources/icons/chevron-forward.svg"
             icon.color: "white"
             icon.width: 20
