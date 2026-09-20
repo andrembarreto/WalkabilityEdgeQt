@@ -2,6 +2,7 @@
 #define JOURNEYAPI_H
 
 #include <QObject>
+#include <QNetworkAccessManager>
 
 #include "src/application/journey-dispatcher/ijourneyapi.h"
 
@@ -11,7 +12,11 @@ class JourneyAPI : public QObject, public IJourneyAPI
 public:
     JourneyAPI(QObject* parent = nullptr);
 
-    QFuture<bool> post(const QJsonObject&) override;
+    QFuture<QVariant> postJourney(const QJsonObject& journeyData) override;
+    QFuture<QJsonObject> getJourneyScore(const QVariant& journeyID) override;
+
+private:
+    QNetworkAccessManager* const m_manager;
 };
 
 #endif // JOURNEYAPI_H

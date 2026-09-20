@@ -1,37 +1,6 @@
 #include "journeydispatcherviewmodel.h"
 #include "src/application/journey-dispatcher/journeydispatcher.h"
-#include "src/application/journey-dispatcher/ijourneyapi.h"
-
-#include <QJsonObject>
-#include <QPromise>
-#include <QTimer>
-#include <memory>
-
-namespace {
-
-class MockJourneyAPI : public QObject, public IJourneyAPI
-{
-    Q_OBJECT
-
-public:
-    explicit MockJourneyAPI(QObject* parent = nullptr)
-        : QObject{parent}
-    {}
-
-    QFuture<bool> post(const QJsonObject& obj) {
-        qDebug() << obj;
-        auto promise = std::make_shared<QPromise<bool>>();
-        auto future = promise->future();
-        promise->start();
-        QTimer::singleShot(2000, this, [=](){
-            promise->addResult(true);
-            promise->finish();
-        });
-        return future;
-    }
-};
-
-}
+#include "src/infra/journey-api/journeyapi.h"
 
 JourneyDispatcherViewModel::JourneyDispatcherViewModel(QObject *parent)
     : QObject{parent}
@@ -40,7 +9,7 @@ JourneyDispatcherViewModel::JourneyDispatcherViewModel(QObject *parent)
 
 void JourneyDispatcherViewModel::execute(const Journey& journey)
 {
-    auto api = new MockJourneyAPI(this);
+    auto api = new JourneyAPI(this);
     auto dispatcher = new JourneyDispatcher(api, this);
     m_isExecuting = true;
     emit isExecutingChanged();
@@ -55,5 +24,3 @@ void JourneyDispatcherViewModel::execute(const Journey& journey)
         emit isExecutingChanged();
     });
 }
-
-#include "journeydispatcherviewmodel.moc"

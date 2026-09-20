@@ -55,9 +55,13 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/infra/positioning/positioningservice.cpp
         src/infra/positioning/positioningservicefactory.h
         src/infra/journey-api/journeyapi.h src/infra/journey-api/journeyapi.cpp
+        src/infra/journey-api/mockjourneyapi.h
+        src/infra/cache/cacheimpl.cpp
         src/application/journey-dispatcher/journeydispatcher.h src/application/journey-dispatcher/journeydispatcher.cpp
         src/application/journey-dispatcher/journeydispatchresult.h
         src/application/journey-dispatcher/ijourneyapi.h
+        src/application/journey-cache/journeycache.h
+
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc

@@ -1,6 +1,7 @@
 #include "journeydispatcher.h"
 #include "ijourneyapi.h"
 #include "journeydispatchresult.h"
+#include "src/application/journey-cache/journeycache.h"
 
 #include <QJsonObject>
 #include <QJsonArray>
@@ -49,10 +50,13 @@ JourneyDispatcher::JourneyDispatcher(IJourneyAPI* api, QObject *parent)
 
 QFuture<JourneyDispatchResult> JourneyDispatcher::execute(const Journey& journey)
 {
-    return m_api->post(journeyToJson(journey)).then(this, [](bool success){
+    return m_api->postJourney(journeyToJson(journey)).then(this, [](QVariant journeyID){
+        bool success = journeyID.isValid();
         return JourneyDispatchResult{
             success,
             success ? "Enviado" : "Falha ao enviar"
         };
+        if(success)
+            cache::storeJourneyID(journeyID.toString().toUtf8().constData());
     });
 }
