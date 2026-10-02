@@ -12,6 +12,7 @@ class IPositioningService;
 class JourneyTracker : public QObject
 {
     Q_OBJECT
+
 public:
     explicit JourneyTracker(
         std::unique_ptr<IPositioningService> positioningService,
@@ -39,6 +40,9 @@ private:
     std::optional<Position> m_lastKnownPosition;
     Stopwatch* const m_stopwatch;
     std::unique_ptr<IPositioningService> m_positioningService;
+    int m_timeOffset_s;
+
+    void startUpdates();
 };
 
 #endif // JOURNEYTRACKER_H

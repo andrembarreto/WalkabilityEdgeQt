@@ -2,6 +2,7 @@
 #include "src/application/utils/stopwatch.h"
 #include "src/domain/journey/ipositioningservice.h"
 #include "src/domain/journey/event.h"
+#include "src/application/journey-cache/journeycache.h"
 
 JourneyTracker::JourneyTracker(
     std::unique_ptr<IPositioningService> positioningService,
@@ -10,6 +11,7 @@ JourneyTracker::JourneyTracker(
     : QObject{parent}
     , m_stopwatch(new Stopwatch(this))
     , m_positioningService(std::move(positioningService))
+    , m_timeOffset_s(0)
 {
     connect(
         m_stopwatch, &Stopwatch::updated,
@@ -20,6 +22,15 @@ JourneyTracker::JourneyTracker(
         m_positioningService.get(), &IPositioningService::updated,
         this, &JourneyTracker::onPositionUpdated
     );
+
+    auto ongoingJourney = cache::getJourney();
+    if(ongoingJourney.has_value())
+    {
+        m_timeOffset_s = ongoingJourney->elapsedTime;
+        m_journey = ongoingJourney;
+        m_journey->isActive = true;
+        startUpdates();
+    }
 }
 
 void JourneyTracker::updateElapsedTime(int elapsed_ms)
@@ -27,8 +38,10 @@ void JourneyTracker::updateElapsedTime(int elapsed_ms)
     if(!journeyIsActive())
         return;
 
-    m_journey->setElapsedTime(elapsed_ms / 1000);
+    int elapsed_s = (elapsed_ms / 1000) + m_timeOffset_s;
+    m_journey->elapsedTime = elapsed_s;
     emit elapsedTimeChanged();
+    cache::putElapsedTime(elapsed_s);
 }
 
 void JourneyTracker::onPositionUpdated(const Position& pos)
@@ -37,7 +50,8 @@ void JourneyTracker::onPositionUpdated(const Position& pos)
         return;
 
     m_lastKnownPosition = pos;
-    m_journey->addToRoute(pos);
+    m_journey->route.push_back(pos);
+    cache::putPosition(pos);
 }
 
 void JourneyTracker::startJourney()
@@ -45,10 +59,16 @@ void JourneyTracker::startJourney()
     if(journeyIsActive())
         return;
 
+    cache::cleanJourneyData();
     m_journey = Journey();
-    m_journey->setActive(true);
+    m_journey->isActive = true;
     emit journeyStateChanged();
-    updateElapsedTime(0);
+    startUpdates();
+}
+
+void JourneyTracker::startUpdates()
+{
+    updateElapsedTime(m_timeOffset_s);
     m_stopwatch->start();
     m_lastKnownPosition.reset();
     m_positioningService->startUpdates(1000);
@@ -59,8 +79,9 @@ void JourneyTracker::finishJourney()
     if(!journeyIsActive())
         return;
 
-    m_journey->setActive(false);
+    m_journey->isActive = false;
     emit journeyStateChanged();
+    m_timeOffset_s = 0;
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
 }
@@ -71,17 +92,18 @@ void JourneyTracker::registerEvent(int eventID)
         return;
 
     Event newEvent{eventID, m_lastKnownPosition.value()};
-    m_journey->addToEvents(newEvent);
+    m_journey->events.push_back(newEvent);
+    cache::putEvent(newEvent);
 }
 
 bool JourneyTracker::journeyIsActive() const
 {
-    return m_journey.has_value() && m_journey->isActive();
+    return m_journey.has_value() && m_journey->isActive;
 }
 
 int JourneyTracker::elapsedTime() const
 {
-    return journeyIsActive() ? m_journey->elapsedTime() : 0;
+    return journeyIsActive() ? m_journey->elapsedTime : 0;
 }
 
 const std::optional<Journey>& JourneyTracker::journey() const
