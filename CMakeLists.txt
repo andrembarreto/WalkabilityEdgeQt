@@ -47,6 +47,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/journey/journeyeventviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.h src/presentation/journey/journeydispatcherviewmodel.cpp
         src/presentation/journey/journeyreportviewmodel.h
+        src/presentation/score/scorecalculatorviewmodel.h src/presentation/score/scorecalculatorviewmodel.cpp
         src/infra/data/appdata.h
         src/infra/data/appdata.cpp
         src/domain/journey/ipositioningservice.h
@@ -66,7 +67,10 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc
         config/config.qrc
-
+        SOURCES src/application/score-calculator/scorecalculator.h src/application/score-calculator/scorecalculator.cpp
+        SOURCES
+        SOURCES src/application/score-calculator/scorecalculationresult.h
+        SOURCES src/presentation/score/scoreviewmodel.h
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
