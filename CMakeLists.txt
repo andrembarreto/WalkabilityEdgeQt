@@ -24,6 +24,7 @@ qt_add_executable(appWalkabilityEdgeQt
 
 target_include_directories(appWalkabilityEdgeQt PRIVATE
     src/presentation/journey
+    src/presentation/score
 )
 
 qt_add_qml_module(appWalkabilityEdgeQt
@@ -39,15 +40,21 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/views/journey-finished/JourneyFinishedScreen.qml
         src/presentation/views/journey-result/JourneyResultScreen.qml
     SOURCES
-        src/presentation/journey/journeyviewmodel.h src/presentation/journey/journeyviewmodel.cpp
-        src/application/journey-tracker/journeytracker.h src/application/journey-tracker/journeytracker.cpp
+        src/presentation/journey/journeyviewmodel.h
+        src/presentation/journey/journeyviewmodel.cpp
+        src/application/journey-tracker/journeytracker.h
+        src/application/journey-tracker/journeytracker.cpp
         src/domain/journey/journey.h
-        src/application/utils/stopwatch.h src/application/utils/stopwatch.cpp
+        src/application/utils/stopwatch.h
+        src/application/utils/stopwatch.cpp
         src/presentation/journey/journeydimensionviewmodel.h
         src/presentation/journey/journeyeventviewmodel.h
-        src/presentation/journey/journeydispatcherviewmodel.h src/presentation/journey/journeydispatcherviewmodel.cpp
+        src/presentation/journey/journeydispatcherviewmodel.h
+        src/presentation/journey/journeydispatcherviewmodel.cpp
         src/presentation/journey/journeyreportviewmodel.h
-        src/presentation/score/scorecalculatorviewmodel.h src/presentation/score/scorecalculatorviewmodel.cpp
+        src/presentation/score/scorecalculatorviewmodel.h
+        src/presentation/score/scorecalculatorviewmodel.cpp
+        src/presentation/score/scoreviewmodel.h
         src/infra/data/appdata.h
         src/infra/data/appdata.cpp
         src/domain/journey/ipositioningservice.h
@@ -55,22 +62,22 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/domain/journey/event.h
         src/infra/positioning/positioningservice.cpp
         src/infra/positioning/positioningservicefactory.h
-        src/infra/journey-api/journeyapi.h src/infra/journey-api/journeyapi.cpp
+        src/infra/journey-api/journeyapi.h
+        src/infra/journey-api/journeyapi.cpp
         src/infra/journey-api/mockjourneyapi.h
         src/infra/cache/cacheimpl.cpp
-        src/application/journey-dispatcher/journeydispatcher.h src/application/journey-dispatcher/journeydispatcher.cpp
+        src/application/journey-dispatcher/journeydispatcher.h
+        src/application/journey-dispatcher/journeydispatcher.cpp
         src/application/journey-dispatcher/journeydispatchresult.h
         src/application/journey-dispatcher/ijourneyapi.h
         src/application/journey-cache/journeycache.h
-
+        src/application/score-calculator/scorecalculator.h
+        src/application/score-calculator/scorecalculator.cpp
+        src/application/score-calculator/scorecalculationresult.h
     RESOURCES
         src/presentation/resources/resources.qrc
         src/infra/data/data.qrc
         config/config.qrc
-        SOURCES src/application/score-calculator/scorecalculator.h src/application/score-calculator/scorecalculator.cpp
-        SOURCES
-        SOURCES src/application/score-calculator/scorecalculationresult.h
-        SOURCES src/presentation/score/scoreviewmodel.h
 )
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia

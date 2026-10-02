@@ -9,8 +9,8 @@
 class ScoreCalculatorViewModel : public QObject
 {
     Q_OBJECT
-    QML_SINGLETON
     QML_ELEMENT
+    QML_SINGLETON
     Q_PROPERTY(scoreViewModel score READ score NOTIFY scoreChanged)
 
 public:
