@@ -50,13 +50,13 @@ JourneyDispatcher::JourneyDispatcher(IJourneyAPI* api, QObject *parent)
 
 QFuture<JourneyDispatchResult> JourneyDispatcher::execute(const Journey& journey)
 {
-    return m_api->postJourney(journeyToJson(journey)).then(this, [](QVariant journeyID){
+    return m_api->postJourney(journeyToJson(journey)).then(this, [](QVariant journeyID) {
         bool success = journeyID.isValid();
+        if(success)
+            cache::putSavedJourneyID(journeyID.toString().toUtf8().constData());
         return JourneyDispatchResult{
             success,
             success ? "Enviado" : "Falha ao enviar"
         };
-        if(success)
-            cache::putSavedJourneyID(journeyID.toString().toUtf8().constData());
     });
 }
