@@ -25,13 +25,13 @@ namespace {
 
     QJsonObject journeyToJson(const Journey& journey) {
         QJsonArray route;
-        for(const auto& position: journey.route())
+        for(const auto& position: journey.route)
         {
             route.append(positionToJson(position));
         }
 
         QJsonArray events;
-        for(const auto& event: journey.events())
+        for(const auto& event: journey.events)
         {
             events.append(eventToJson(event));
         }
@@ -57,6 +57,6 @@ QFuture<JourneyDispatchResult> JourneyDispatcher::execute(const Journey& journey
             success ? "Enviado" : "Falha ao enviar"
         };
         if(success)
-            cache::storeJourneyID(journeyID.toString().toUtf8().constData());
+            cache::putSavedJourneyID(journeyID.toString().toUtf8().constData());
     });
 }
