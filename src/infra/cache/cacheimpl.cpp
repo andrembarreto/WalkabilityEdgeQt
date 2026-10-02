@@ -74,18 +74,22 @@ void putEvent(const Event& event)
     appendLine("events.csv", line);
 }
 
-
-void putElapsedTime(int elapsedTime_s)
+void resetJourney()
 {
+    cleanJourney();
+
     QSettings settings;
-    settings.setValue("ongoingJourneyElapsedTime", elapsedTime_s);
+    settings.setValue("activeJourney", true);
+    settings.setValue("journeyStartTime", QDateTime::currentSecsSinceEpoch());
     settings.sync();
 }
 
-void cleanJourneyData()
+void cleanJourney()
 {
     QSettings settings;
-    settings.remove("ongoingJourneyElapsedTime");
+    settings.setValue("activeJourney", false);
+    settings.remove("journeyStartTime");
+    settings.sync();
 
     QFile::remove(cacheDirPath() + QDir::separator() + "route.csv");
     QFile::remove(cacheDirPath() + QDir::separator() + "events.csv");
@@ -94,12 +98,16 @@ void cleanJourneyData()
 std::optional<Journey> getJourney()
 {
     QSettings settings;
-    const QVariant elapsedTimeValue = settings.value("ongoingJourneyElapsedTime");
-    if(!elapsedTimeValue.isValid())
+
+    const QVariant isActive = settings.value("activeJourney", false);
+    if(!isActive.isValid() || !isActive.toBool())
         return std::nullopt;
 
     Journey journey;
-    journey.elapsedTime = elapsedTimeValue.toInt();
+    const QVariant journeyStartTime = settings.value("journeyStartTime");
+    journey.elapsedTime = static_cast<int>(
+        QDateTime::currentSecsSinceEpoch() - journeyStartTime.toLongLong()
+    );
 
     for(const QString& line : readLines("route.csv"))
     {

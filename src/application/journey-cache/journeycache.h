@@ -14,8 +14,9 @@ namespace cache {
 void putSavedJourneyID(const std::string& ID);
 void putPosition(const Position& pos);
 void putEvent(const Event& event);
-void putElapsedTime(int elapsedTime_s);
-void cleanJourneyData();
+
+void resetJourney();
+void cleanJourney();
 
 /* Read operations */
 std::optional<Journey> getJourney();

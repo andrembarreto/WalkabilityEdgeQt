@@ -41,7 +41,6 @@ void JourneyTracker::updateElapsedTime(int elapsed_ms)
     int elapsed_s = (elapsed_ms / 1000) + m_timeOffset_s;
     m_journey->elapsedTime = elapsed_s;
     emit elapsedTimeChanged();
-    cache::putElapsedTime(elapsed_s);
 }
 
 void JourneyTracker::onPositionUpdated(const Position& pos)
@@ -59,10 +58,10 @@ void JourneyTracker::startJourney()
     if(journeyIsActive())
         return;
 
-    cache::cleanJourneyData();
     m_journey = Journey();
     m_journey->isActive = true;
     emit journeyStateChanged();
+    cache::resetJourney();
     startUpdates();
 }
 
@@ -84,6 +83,7 @@ void JourneyTracker::finishJourney()
     m_timeOffset_s = 0;
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
+    cache::cleanJourney();
 }
 
 void JourneyTracker::registerEvent(int eventID)
