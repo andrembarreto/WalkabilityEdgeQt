@@ -6,6 +6,9 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    app.setOrganizationName("TCC Usp Esalq");
+    app.setOrganizationDomain("tcc.usp.esalq");
+    app.setApplicationName("Caminhabilidade");
 
     const auto dimensions = appdata::loadData();
 
