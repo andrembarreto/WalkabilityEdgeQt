@@ -28,13 +28,12 @@ Window {
     // Use para conteudo que precise dessa garantia estrita.
     readonly property real inscribedMargin: displaySize * (1.0 - 1.0 / Math.sqrt(2.0)) / 2.0
 
-    // Area util da interface. O conteudo da aplicacao entra aqui dentro.
     StackView {
         id: stack
 
         anchors.fill: parent
         anchors.margins: window.safeMargin
-        initialItem: journeyStartScreen
+        initialItem: JourneyViewModel.isActive ? journeyActiveScreen : journeyStartScreen
 
         Component {
             id: journeyStartScreen
@@ -55,7 +54,7 @@ Window {
                     stack.push(journeyEventsScreen, { events: dimension.events });
                 }
                 onFinished: {
-                    stack.replace(journeyFinishedScreen);
+                    stack.replace(journeyFinishedScreen, { report: JourneyViewModel.makeReport() });
                 }
             }
         }
@@ -74,6 +73,16 @@ Window {
             id: journeyFinishedScreen
 
             JourneyFinishedScreen {
+                onFinished: {
+                    stack.push(journeyResultScreen);
+                }
+            }
+        }
+
+        Component {
+            id: journeyResultScreen
+
+            JourneyResultScreen {
 
             }
         }
