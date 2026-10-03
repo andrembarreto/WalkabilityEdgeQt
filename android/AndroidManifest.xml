@@ -25,6 +25,17 @@
          relogios sem GPS proprio, que obtem a posicao do celular pareado. -->
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Necessarias para o JourneyTrackingService, que mantem a rota sendo
+         registrada com o app minimizado. FOREGROUND_SERVICE_LOCATION e exigida a
+         partir do Android 14 para servicos com foregroundServiceType="location". -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
+    <!-- O servico segura um PARTIAL_WAKE_LOCK durante a jornada para que a CPU
+         nao suspenda: o Stopwatch usa steady_clock, que para durante a suspensao. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- A partir do Android 13 a notificacao do foreground service so e exibida
+         com esta permissao. Sem ela o servico roda, mas a notificacao fica oculta. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
     <!--%%INSERT_FEATURES-->
     <application android:allowBackup="true" android:enableOnBackInvokedCallback="false" android:fullBackupOnly="false" android:hardwareAccelerated="true" android:icon="-- %%INSERT_APP_ICON%% --" android:label="-- %%INSERT_APP_NAME%% --" android:name="org.qtproject.qt.android.bindings.QtApplication" android:theme="@android:style/Theme.DeviceDefault" android:usesCleartextTraffic="true">
@@ -38,7 +49,14 @@
             </intent-filter>
             <meta-data android:name="android.app.lib_name" android:value="-- %%INSERT_APP_LIB_NAME%% --"/>
             <meta-data android:name="android.app.arguments" android:value="-- %%INSERT_APP_ARGUMENTS%% --"/>
+            <!-- Sem isto o Qt bloqueia o event loop quando o app vai para segundo
+                 plano (QT_BLOCK_EVENT_LOOPS_WHEN_SUSPENDED=1) e nem as posicoes do
+                 GPS nem o timer do Stopwatch chegam ao JourneyTracker. -->
+            <meta-data android:name="android.app.background_running" android:value="true"/>
         </activity>
+        <!-- Foreground service que mantem a rota sendo registrada com o app
+             minimizado. Iniciado e parado pelo C++ (src/infra/background-tracking/). -->
+        <service android:exported="false" android:foregroundServiceType="location" android:name=".JourneyTrackingService"/>
         <provider android:authorities="${applicationId}.qtprovider" android:exported="false" android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/qtprovider_paths"/>
         </provider>

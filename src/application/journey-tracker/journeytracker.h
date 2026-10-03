@@ -5,6 +5,7 @@
 
 #include "src/domain/journey/journey.h"
 #include "src/domain/journey/position.h"
+#include "ibackgroundtrackingservice.h"
 
 class Stopwatch;
 class IPositioningService;
@@ -16,6 +17,7 @@ class JourneyTracker : public QObject
 public:
     explicit JourneyTracker(
         std::unique_ptr<IPositioningService> positioningService,
+        std::unique_ptr<IBackgroundTrackingService> backgroundService,
         QObject *parent = nullptr
     );
 
@@ -40,6 +42,7 @@ private:
     std::optional<Position> m_lastKnownPosition;
     Stopwatch* const m_stopwatch;
     std::unique_ptr<IPositioningService> m_positioningService;
+    std::unique_ptr<IBackgroundTrackingService> m_backgroundService;
     int m_timeOffset_s;
 
     void startUpdates();

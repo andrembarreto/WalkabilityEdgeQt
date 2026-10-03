@@ -44,6 +44,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/journey/journeyviewmodel.cpp
         src/application/journey-tracker/journeytracker.h
         src/application/journey-tracker/journeytracker.cpp
+        src/application/journey-tracker/ibackgroundtrackingservice.h
         src/domain/journey/journey.h
         src/application/utils/stopwatch.h
         src/application/utils/stopwatch.cpp
@@ -62,6 +63,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/domain/journey/event.h
         src/infra/positioning/positioningservice.cpp
         src/infra/positioning/positioningservicefactory.h
+        src/infra/background-tracking/backgroundtrackingservice.cpp
+        src/infra/background-tracking/backgroundtrackingservicefactory.h
         src/infra/journey-api/journeyapi.h
         src/infra/journey-api/journeyapi.cpp
         src/infra/journey-api/mockjourneyapi.h

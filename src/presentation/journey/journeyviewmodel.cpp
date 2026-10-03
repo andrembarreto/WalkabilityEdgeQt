@@ -4,10 +4,11 @@
 
 #include "src/application/journey-tracker/journeytracker.h"
 #include "src/infra/positioning/positioningservicefactory.h"
+#include "src/infra/background-tracking/backgroundtrackingservicefactory.h"
 
 JourneyViewModel::JourneyViewModel(QObject *parent)
     : QObject{parent}
-    , m_tracker(new JourneyTracker(createService(), this))
+    , m_tracker(new JourneyTracker(createService(), createBackgroundTrackingService(), this))
     , m_dispatcher(new JourneyDispatcherViewModel(this))
 {
     connect(

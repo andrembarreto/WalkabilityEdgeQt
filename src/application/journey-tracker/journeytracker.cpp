@@ -6,11 +6,13 @@
 
 JourneyTracker::JourneyTracker(
     std::unique_ptr<IPositioningService> positioningService,
+    std::unique_ptr<IBackgroundTrackingService> backgroundService,
     QObject *parent
 )
     : QObject{parent}
     , m_stopwatch(new Stopwatch(this))
     , m_positioningService(std::move(positioningService))
+    , m_backgroundService(std::move(backgroundService))
     , m_timeOffset_s(0)
 {
     connect(
@@ -71,6 +73,7 @@ void JourneyTracker::startUpdates()
     m_stopwatch->start();
     m_lastKnownPosition.reset();
     m_positioningService->startUpdates(1000);
+    m_backgroundService->start();
 }
 
 void JourneyTracker::finishJourney()
@@ -83,6 +86,7 @@ void JourneyTracker::finishJourney()
     m_timeOffset_s = 0;
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
+    m_backgroundService->stop();
     cache::cleanJourney();
 }
 
