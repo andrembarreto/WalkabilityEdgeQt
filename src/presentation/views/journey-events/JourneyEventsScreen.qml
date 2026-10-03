@@ -15,48 +15,56 @@ Page {
 
     contentItem: ColumnLayout {
 
-        Button {
-            id: buttonReturn
-            Layout.alignment: Qt.AlignHCenter
-            display: Button.TextBesideIcon
-            Material.foreground: "white"
-            Material.background: pressed ? "lightblue" : "transparent"
-            text: "Voltar"
-            font.pointSize: 10
-            icon.source: "qrc:/resources/icons/chevron-backward.svg"
-            icon.height: 12
-            icon.width: 12
-            onClicked: {
-                root.returned();
-            }
-        }
-
         Tumbler {
             id: eventsContainer
             Layout.alignment: Qt.AlignHCenter
             Layout.fillHeight: true
             Layout.fillWidth: true
+            visibleItemCount: 3
+            flickDeceleration: 3000
 
             model: root.events
             delegate: Label {
+                readonly property bool isCurrentItem:
+                    index === Tumbler.tumbler.currentIndex
                 text: modelData.name
-                color: "white"
-                font.pointSize: index === Tumbler.tumbler.currentIndex ? 12 : 8
+                color: isCurrentItem ? "lightblue" : "white"
+                width: parent.width
+                wrapMode: Text.WordWrap
+                font.pointSize: 10
+                minimumPointSize: 7
+                fontSizeMode: Text.Fit
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
                 opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
                 horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                padding: 8
             }
         }
 
-        Button {
-            id: button
+        Row {
             Layout.alignment: Qt.AlignHCenter
-            text: qsTr("Registrar")
-            font.pointSize: 10
-            onClicked: {
-                let highlightedEvent = root.events[eventsContainer.currentIndex];
-                JourneyViewModel.registerEvent(highlightedEvent.id);
+            spacing: 6
+
+            Button {
+                id: buttonReturn
+                icon.source: "qrc:/resources/icons/chevron-backward.svg"
+                icon.color: "white"
+                icon.width: 20
+                width: 40
+                onClicked: {
+                    root.returned();
+                }
+            }
+            Button {
+                id: button
+                icon.source: "qrc:/resources/icons/pin-drop.svg"
+                icon.color: "white"
+                icon.width: 20
+                width: 40
+                onClicked: {
+                    let highlightedEvent = root.events[eventsContainer.currentIndex];
+                    JourneyViewModel.registerEvent(highlightedEvent.id);
+                }
             }
         }
     }

@@ -5,5 +5,7 @@
         <file>icons/shield.svg</file>
         <file>icons/route.svg</file>
         <file>icons/replay.svg</file>
+        <file>icons/pin-drop.svg</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>
