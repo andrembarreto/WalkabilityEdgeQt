@@ -1,22 +1,120 @@
 {
-    "version": 0.1,
-    "dimensions": [
+  "dimensions": [
+    {
+      "id": 0,
+      "name": "Segurança",
+      "events": [
         {
-            "id": 1,
-            "name": "Segurança",
-            "icon": "qrc:/resources/icons/shield.svg",
-            "events": [
-                { "id": 1, "name": "Evento 1" },
-                { "id": 2, "name": "Evento 2" }
-            ]
+          "id": 0,
+          "description": "Segmento totalmente deserto"
         },
         {
-            "id": 2,
-            "name": "Continuidade",
-            "icon": "qrc:/resources/icons/route.svg",
-            "events": [
-                { "id": 3, "name": "Evento 3" }
-            ]
+          "id": 1,
+          "description": "Segmento superlotado"
+        },
+        {
+          "id": 4096,
+          "description": "Segmento escuro ou com visibilidade ruim"
+        },
+        {
+          "id": 8192,
+          "description": "Segmento sem calçada"
+        },
+        {
+          "id": 12288,
+          "description": "Segmento com calçada exposta ao tráfego"
+        },
+        {
+          "id": 16384,
+          "description": "Veículos trafegando em alta velocidade"
         }
-    ]
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Continuidade",
+      "events": [
+        {
+          "id": 16777216,
+          "description": "Interseção não semaforizada"
+        },
+        {
+          "id": 16781312,
+          "description": "Segmento sem mecanismos de acessibilidade"
+        },
+        {
+          "id": 16785408,
+          "description": "Bloqueio ou obstáculo na calçada"
+        },
+        {
+          "id": 16789504,
+          "description": "Segmento com calçada muito estreita"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Conveniência",
+      "events": [
+        {
+          "id": 33554432,
+          "description": "Segmento sem acesso a outros meios de transporte"
+        },
+        {
+          "id": 33558528,
+          "description": "Segmento sem sinalização para pedestre"
+        },
+        {
+          "id": 33562624,
+          "description": "Esperei muito tempo para atravessar a rua"
+        },
+        {
+          "id": 33566720,
+          "description": "Quadra excessivamente longa"
+        },
+        {
+          "id": 33570816,
+          "description": "Segmento sem comércio ou serviço que me interesse"
+        },
+        {
+          "id": 33574912,
+          "description": "Segmento muito íngreme"
+        },
+        {
+          "id": 33574913,
+          "description": "Segmento com terreno irregular"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Agradabilidade",
+      "events": [
+        {
+          "id": 50331648,
+          "description": "Segmento não arborizado"
+        },
+        {
+          "id": 50335744,
+          "description": "Segmento sem abrigo de sol e chuva"
+        },
+        {
+          "id": 50339840,
+          "description": "Segmento sem local para sentar"
+        },
+        {
+          "id": 50343936,
+          "description": "Segmento sem lixeiras"
+        },
+        {
+          "id": 50348032,
+          "description": "Segmento sujo ou com lixo espalhado"
+        },
+        {
+          "id": 50352128,
+          "description": "Segmento com ar poluído"
+        }
+      ]
+    }
+  ]
 }
