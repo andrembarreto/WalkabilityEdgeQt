@@ -69,7 +69,7 @@ void JourneyTracker::startJourney()
 
 void JourneyTracker::startUpdates()
 {
-    updateElapsedTime(m_timeOffset_s);
+    updateElapsedTime(0);
     m_stopwatch->start();
     m_lastKnownPosition.reset();
     m_positioningService->startUpdates(1000);
