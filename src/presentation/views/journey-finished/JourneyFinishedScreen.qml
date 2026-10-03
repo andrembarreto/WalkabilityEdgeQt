@@ -7,8 +7,9 @@ import WalkabilityEdgeQt
 
 Page {
     id: root
-    required property journeyReportViewModel report
+
     signal finished()
+    signal discarded()
 
     background: null
 
@@ -27,65 +28,47 @@ Page {
 
     contentItem: StackLayout {
         currentIndex: JourneyViewModel.dispatcher.isExecuting ?
-            frameSendingJourney.index : frameShowingJourney.index
+            frameSending.index : frameDialog.index
 
         Item {
-            id: frameShowingJourney
+            id: frameDialog
             readonly property int index: StackLayout.index
 
-            Label {
-                anchors {
-                    bottom: reportColumn.top
-                    bottomMargin: 12
-                    horizontalCenter: parent.horizontalCenter
-                }
-                text: qsTr("Percurso concluído")
-                color: "white"
-                font.pointSize: 10
-                font.bold: true
-            }
-
             ColumnLayout {
-                id: reportColumn
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
-                    margins: 20
-                }
-                spacing: 4
+                anchors.centerIn: parent
 
-                Repeater {
-                    model: [
-                        { field: qsTr("Início"), value: report.startTime },
-                        { field: qsTr("Fim"), value: report.finishTime },
-                        { field: qsTr("Duração"), value: report.duration },
-                        { field: qsTr("Distância"), value: report.totalDistance },
-                    ]
-                    delegate: Label {
-                        text: modelData.field + ": " + modelData.value
-                        color: "white"
-                        font.pointSize: 10
+                Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: qsTr("Percurso concluído")
+                    color: "white"
+                    font.pointSize: 10
+                }
+
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+
+                    Button {
+                        id: buttonDiscard
+                        icon.source: "qrc:/resources/icons/delete.svg"
+                        onPressAndHold: {
+                            JourneyViewModel.discard();
+                            root.discarded();
+                        }
                     }
-                }
-            }
 
-            Button {
-                id: buttonSave
-                anchors {
-                    bottom: parent.bottom
-                    horizontalCenter: parent.horizontalCenter
-                }
-                text: qsTr("Salvar")
-                font.pointSize: 12
-                onClicked: {
-                    JourneyViewModel.dispatch();
+                    Button {
+                        id: buttonSave
+                        icon.source: "qrc:/resources/icons/save.svg"
+                        onClicked: {
+                            JourneyViewModel.dispatch();
+                        }
+                    }
                 }
             }
         }
 
         Item {
-            id: frameSendingJourney
+            id: frameSending
             readonly property int index: StackLayout.index
 
             ColumnLayout {
@@ -127,7 +110,7 @@ Page {
             property color backgroundColor: "transparent"
 
             x: parent.width/2 - width/2
-            y: 8
+            y: parent.height - height - 8
             padding: 8
 
             background: Rectangle {
@@ -140,6 +123,14 @@ Page {
                 font.pointSize: 8
                 wrapMode: Text.WordWrap
             }
+
+            Timer {
+                interval: 3000
+                running: popupMessage.opened
+                onTriggered: popupMessage.close()
+            }
+
+            onClosed: popupMessage.destroy()
         }
     }
 }

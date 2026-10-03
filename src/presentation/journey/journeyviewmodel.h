@@ -26,7 +26,6 @@ public:
     Q_INVOKABLE void discard();
     Q_INVOKABLE void registerEvent(int eventID);
     Q_INVOKABLE void dispatch();
-    Q_INVOKABLE journeyReportViewModel makeReport() const;
     Q_INVOKABLE bool canResume() const;
 
     bool isActive() const;

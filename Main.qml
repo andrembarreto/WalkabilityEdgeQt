@@ -73,7 +73,7 @@ Window {
                     stack.push(journeyEventsScreen, { events: dimension.events });
                 }
                 onFinished: {
-                    stack.replace(journeyFinishedScreen, { report: JourneyViewModel.makeReport() });
+                    stack.replace(journeyFinishedScreen);
                 }
             }
         }
@@ -94,6 +94,9 @@ Window {
             JourneyFinishedScreen {
                 onFinished: {
                     stack.push(evaluateJourneyScreen);
+                }
+                onDiscarded: {
+                    stack.replace(journeyStartScreen);
                 }
             }
         }

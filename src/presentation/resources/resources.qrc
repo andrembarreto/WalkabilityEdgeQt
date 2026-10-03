@@ -9,6 +9,8 @@
         <file>icons/pending-actions.svg</file>
         <file>icons/nature-people.svg</file>
         <file>icons/home.svg</file>
+        <file>icons/save.svg</file>
+        <file>icons/delete.svg</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/form-qr.png</file>

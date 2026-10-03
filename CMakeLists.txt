@@ -53,7 +53,7 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/application/utils/stopwatch.cpp
         src/presentation/journey/journeydispatcherviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.cpp
-        src/presentation/journey/journeyreportviewmodel.h
+
         src/presentation/score/scorecalculatorviewmodel.h
         src/presentation/score/scorecalculatorviewmodel.cpp
         src/presentation/score/scoreviewmodel.h
