@@ -44,6 +44,10 @@ inline QString iconForDimension(int id)
         return "qrc:/resources/icons/shield.svg";
     case 1:
         return "qrc:/resources/icons/route.svg";
+    case 2:
+        return "qrc:/resources/icons/pending-actions.svg";
+    case 3:
+        return "qrc:/resources/icons/nature-people.svg";
     default:
         return QString();
     }

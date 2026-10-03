@@ -6,6 +6,8 @@
         <file>icons/route.svg</file>
         <file>icons/replay.svg</file>
         <file>icons/pin-drop.svg</file>
+        <file>icons/pending-actions.svg</file>
+        <file>icons/nature-people.svg</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>
