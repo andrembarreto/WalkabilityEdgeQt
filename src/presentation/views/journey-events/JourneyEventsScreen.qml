@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Controls.Material
 
 import WalkabilityEdgeQt
 
@@ -10,6 +9,14 @@ Page {
 
     signal returned()
     required property list<journeyEventViewModel> events
+
+    // efeito para evento selecionado --> esmaece para indicar que ainda não foi registrado
+    property real highlightOpacity: buttonConfirm.pressed && !buttonConfirm.confirmed ? 0.75 : 1.0
+    property color highlightColor: "lightblue"
+
+    Behavior on highlightOpacity {
+        NumberAnimation { duration: 150 }
+    }
 
     background: null
 
@@ -28,7 +35,7 @@ Page {
                 readonly property bool isCurrentItem:
                     index === Tumbler.tumbler.currentIndex
                 text: modelData.name
-                color: isCurrentItem ? "lightblue" : "white"
+                color: isCurrentItem ? root.highlightColor : "white"
                 width: parent.width
                 wrapMode: Text.WordWrap
                 font.pointSize: 10
@@ -36,36 +43,54 @@ Page {
                 fontSizeMode: Text.Fit
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
-                opacity: 1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2)
+                opacity: (1.0 - Math.abs(Tumbler.displacement) / (Tumbler.tumbler.visibleItemCount / 2))
+                         * (isCurrentItem ? root.highlightOpacity : 1.0)
                 horizontalAlignment: Text.AlignHCenter
             }
         }
 
-        Row {
+        RowLayout {
             Layout.alignment: Qt.AlignHCenter
-            spacing: 6
 
             Button {
                 id: buttonReturn
                 icon.source: "qrc:/resources/icons/chevron-backward.svg"
-                icon.color: "white"
-                icon.width: 20
-                width: 40
                 onClicked: {
                     root.returned();
                 }
             }
             Button {
-                id: button
+                id: buttonConfirm
+                property bool confirmed: false
                 icon.source: "qrc:/resources/icons/pin-drop.svg"
-                icon.color: "white"
-                icon.width: 20
-                width: 40
-                onClicked: {
+                onPressed: {
+                    confirmed = false;
+                }
+                onPressAndHold: {
                     let highlightedEvent = root.events[eventsContainer.currentIndex];
                     JourneyViewModel.registerEvent(highlightedEvent.id);
+                    confirmed = true;
+                    highlightFlash.restart();
                 }
             }
+        }
+    }
+
+    // piscadinha no texto do evento selecionado para mostrar registro
+    SequentialAnimation {
+        id: highlightFlash
+        ColorAnimation {
+            target: root
+            property: "highlightColor"
+            to: "orange"
+            duration: 80
+        }
+        PauseAnimation { duration: 200 }
+        ColorAnimation {
+            target: root
+            property: "highlightColor"
+            to: "lightblue"
+            duration: 300
         }
     }
 }
