@@ -1,31 +1,13 @@
 #include "journeyapi.h"
 
+#include "src/infra/api/common/apiutils.h"
+
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QSettings>
 #include <memory>
-
-namespace {
-    QString getBaseUrl() {
-        QSettings settings(":/config/app.ini", QSettings::IniFormat);
-        auto raw = settings.value("API/BaseUrl", "http://localhost:8000");
-        return raw.toString();
-    }
-
-    QJsonDocument jsonReply(QNetworkReply* reply) {
-        if(reply->error() != QNetworkReply::NoError)
-            return QJsonDocument();
-        QByteArray rawData = reply->readAll();
-        QJsonParseError parseError;
-        QJsonDocument doc = QJsonDocument::fromJson(rawData, &parseError);
-        if (parseError.error != QJsonParseError::NoError)
-            qWarning() << "Erro ao processar JSON" << parseError.errorString();
-        return doc;
-    }
-}
 
 JourneyAPI::JourneyAPI(QObject* parent)
     : QObject{parent}
@@ -38,7 +20,7 @@ QFuture<QVariant> JourneyAPI::postJourney(const QJsonObject& journeyData)
     auto future = promise->future();
     promise->start();
 
-    QNetworkRequest request(QUrl(getBaseUrl() + "/journeys"));
+    QNetworkRequest request(QUrl(ApiUtils::getBaseUrl() + "/journeys"));
     request.setTransferTimeout(5000);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     auto data = QJsonDocument(journeyData).toJson(QJsonDocument::Compact);
@@ -46,7 +28,7 @@ QFuture<QVariant> JourneyAPI::postJourney(const QJsonObject& journeyData)
 
     connect(reply, &QNetworkReply::finished, this, [promise, reply]{
         reply->deleteLater();
-        auto json = jsonReply(reply);
+        auto json = ApiUtils::jsonReply(reply);
         if(json.isObject() && json.object().contains("journey_id"))
         {
             auto id = json.object().value("journey_id");
@@ -67,7 +49,7 @@ QFuture<QJsonObject> JourneyAPI::getJourneyScore(const QVariant& journeyID)
     promise->start();
 
     QNetworkRequest request(
-        QUrl(getBaseUrl() + QString("/journeys/%1/score").arg(journeyID.toString()))
+        QUrl(ApiUtils::getBaseUrl() + QString("/journeys/%1/score").arg(journeyID.toString()))
     );
     request.setTransferTimeout(5000);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -75,7 +57,7 @@ QFuture<QJsonObject> JourneyAPI::getJourneyScore(const QVariant& journeyID)
 
     connect(reply, &QNetworkReply::finished, this, [promise, reply]{
         reply->deleteLater();
-        auto json = jsonReply(reply);
+        auto json = ApiUtils::jsonReply(reply);
         if(json.isEmpty())
         {
             promise->addResult({});

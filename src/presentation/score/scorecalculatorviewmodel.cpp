@@ -1,6 +1,6 @@
 #include "scorecalculatorviewmodel.h"
 #include "src/application/score-calculator/scorecalculator.h"
-#include "src/infra/journey-api/journeyapi.h"
+#include "src/infra/api/journey/journeyapi.h"
 #include "src/application/journey-cache/journeycache.h"
 #include "src/infra/data/appdata.h"
 

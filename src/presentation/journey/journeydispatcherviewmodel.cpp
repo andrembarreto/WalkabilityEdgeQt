@@ -1,6 +1,6 @@
 #include "journeydispatcherviewmodel.h"
 #include "src/application/journey-dispatcher/journeydispatcher.h"
-#include "src/infra/journey-api/journeyapi.h"
+#include "src/infra/api/journey/journeyapi.h"
 
 JourneyDispatcherViewModel::JourneyDispatcherViewModel(QObject *parent)
     : QObject{parent}
