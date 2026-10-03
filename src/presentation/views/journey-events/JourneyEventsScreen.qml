@@ -9,7 +9,7 @@ Page {
     id: root
 
     signal returned()
-    required property list<JourneyEventViewModel> events
+    required property list<journeyEventViewModel> events
 
     background: null
 

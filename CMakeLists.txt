@@ -23,6 +23,7 @@ qt_add_executable(appWalkabilityEdgeQt
 )
 
 target_include_directories(appWalkabilityEdgeQt PRIVATE
+    src/presentation/index
     src/presentation/journey
     src/presentation/score
 )
@@ -48,16 +49,12 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/domain/journey/journey.h
         src/application/utils/stopwatch.h
         src/application/utils/stopwatch.cpp
-        src/presentation/journey/journeydimensionviewmodel.h
-        src/presentation/journey/journeyeventviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.cpp
         src/presentation/journey/journeyreportviewmodel.h
         src/presentation/score/scorecalculatorviewmodel.h
         src/presentation/score/scorecalculatorviewmodel.cpp
         src/presentation/score/scoreviewmodel.h
-        src/infra/data/appdata.h
-        src/infra/data/appdata.cpp
         src/domain/journey/ipositioningservice.h
         src/domain/journey/position.h
         src/domain/journey/event.h
@@ -71,6 +68,12 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/infra/cache/cacheimpl.cpp
         src/infra/api/index/indexapi.h
         src/infra/api/index/indexapi.cpp
+        src/application/index-table/iindexapi.h
+        src/application/index-table/indextable.h
+        src/application/index-table/indextable.cpp
+        src/application/index-table/tableitems.h
+        src/application/utils/waitfor.h
+        src/presentation/index/indexparametersviewmodels.h
         src/infra/api/common/apiutils.h
         src/infra/api/common/apiutils.cpp
         src/application/journey-dispatcher/journeydispatcher.h

@@ -10,7 +10,7 @@ Window {
     visibility: Window.FullScreen
     title: qsTr("Caminhabilidade")
 
-    required property list<JourneyDimensionViewModel> dimensions
+    required property list<journeyDimensionViewModel> dimensions
 
     // Fundo preto: padrao em telas OLED de relogio e economiza bateria.
     color: "black"

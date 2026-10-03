@@ -8,8 +8,8 @@ Page {
     id: root
 
     signal finished()
-    signal dimensionSelected(dimension: JourneyDimensionViewModel)
-    required property list<JourneyDimensionViewModel> dimensions
+    signal dimensionSelected(dimension: journeyDimensionViewModel)
+    required property list<journeyDimensionViewModel> dimensions
 
     background: null
 

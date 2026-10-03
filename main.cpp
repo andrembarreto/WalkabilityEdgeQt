@@ -1,7 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "src/infra/data/appdata.h"
+#include "src/application/index-table/indextable.h"
+#include "src/application/utils/waitfor.h"
+#include "src/infra/api/index/indexapi.h"
+#include "src/presentation/index/indexparametersviewmodels.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,7 +13,8 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("tcc.usp.esalq");
     app.setApplicationName("Caminhabilidade");
 
-    const auto dimensions = appdata::loadData();
+    IndexTable::instance().setApi(new IndexAPI(&app));
+    const auto dimensions = toViewModels(waitFor(IndexTable::instance().get()));
 
     QQmlApplicationEngine engine;
     QObject::connect(

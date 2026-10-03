@@ -2,28 +2,29 @@
 #include "src/application/score-calculator/scorecalculator.h"
 #include "src/infra/api/journey/journeyapi.h"
 #include "src/application/journey-cache/journeycache.h"
-#include "src/infra/data/appdata.h"
+#include "src/application/index-table/indextable.h"
+#include "src/application/utils/waitfor.h"
 
 namespace {
 
-QString getDimensionNameByID(int id)
+QString getDimensionNameByID(const QVector<DimensionItem>& dimensions, int id)
 {
-    const auto dimensions = appdata::loadData();
-    for(auto dim: dimensions)
+    for(const auto& dim: dimensions)
     {
-        if(dim->id() == id)
-            return dim->name();
+        if(dim.id == id)
+            return dim.name;
     }
     return QString();
 }
 
 QList<dimensionScoreViewModel> extractDimensionScores(const QMap<QString, float>& scores)
 {
+    const auto dimensions = waitFor(IndexTable::instance().get());
     QList<dimensionScoreViewModel> res;
     for(auto it=scores.begin(); it!=scores.end(); ++it)
     {
         res.append({
-            getDimensionNameByID(it.key().toInt()),
+            getDimensionNameByID(dimensions, it.key().toInt()),
             it.value()
         });
     }
