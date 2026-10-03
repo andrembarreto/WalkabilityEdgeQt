@@ -113,7 +113,9 @@ Window {
             id: journeyResultScreen
 
             JourneyResultScreen {
-
+                onFinished: {
+                    stack.replace(journeyStartScreen);
+                }
             }
         }
     }

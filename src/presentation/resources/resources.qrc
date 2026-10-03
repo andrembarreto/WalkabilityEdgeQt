@@ -8,6 +8,7 @@
         <file>icons/pin-drop.svg</file>
         <file>icons/pending-actions.svg</file>
         <file>icons/nature-people.svg</file>
+        <file>icons/home.svg</file>
     </qresource>
     <qresource prefix="/images">
         <file>images/form-qr.png</file>

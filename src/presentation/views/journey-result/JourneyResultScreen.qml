@@ -7,6 +7,8 @@ import WalkabilityEdgeQt
 Page {
     id: root
 
+    signal finished()
+
     background: null
 
     contentItem: StackLayout {
@@ -52,17 +54,31 @@ Page {
             property dimensionScoreViewModel currentScore:
                 scores[currentIndex]
 
-            Label {
-                id: title
+            ColumnLayout {
                 anchors {
                     top: parent.top
                     topMargin: 12
                     horizontalCenter: parent.horizontalCenter
                 }
-                text: qsTr("Pontuação")
-                color: "white"
-                font.bold: true
-                font.pointSize: 10
+                spacing: 6
+
+                Label {
+                    id: title
+                    Layout.alignment: Qt.AlignHCenter
+                    text: qsTr("Pontuação")
+                    color: "white"
+                    font.pointSize: 10
+                    font.underline: true
+                }
+                Label {
+                    id: global
+                    Layout.alignment: Qt.AlignHCenter
+                    text: qsTr("Global: %1")
+                    .arg(ScoreCalculatorViewModel.score.global.toFixed(1))
+
+                    color: "white"
+                    font.pointSize: 10
+                }
             }
 
             Button {
@@ -119,18 +135,16 @@ Page {
                 }
             }
 
-            Label {
-                id: global
+            Button {
                 anchors {
                     bottom: parent.bottom
                     bottomMargin: 12
                     horizontalCenter: parent.horizontalCenter
                 }
-                text: qsTr("Pontuação global: %1")
-                .arg(ScoreCalculatorViewModel.score.global.toFixed(1))
-
-                color: "white"
-                font.pointSize: 10
+                icon.source: "qrc:/resources/icons/home.svg"
+                onClicked: {
+                    root.finished();
+                }
             }
         }
 
@@ -150,12 +164,21 @@ Page {
                     wrapMode: Text.WordWrap
                 }
 
-                Button {
-                    id: retryButton
+                RowLayout {
                     Layout.alignment: Qt.AlignHCenter
-                    icon.source: "qrc:/resources/icons/replay.svg"
-                    onClicked: {
-                        ScoreCalculatorViewModel.calculate();
+
+                    Button {
+                        icon.source: "qrc:/resources/icons/home.svg"
+                        onClicked: {
+                            root.finished();
+                        }
+                    }
+                    Button {
+                        id: retryButton
+                        icon.source: "qrc:/resources/icons/replay.svg"
+                        onClicked: {
+                            ScoreCalculatorViewModel.calculate();
+                        }
                     }
                 }
             }
