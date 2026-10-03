@@ -9,5 +9,7 @@
         <file>icons/pending-actions.svg</file>
         <file>icons/nature-people.svg</file>
     </qresource>
-    <qresource prefix="/"/>
+    <qresource prefix="/images">
+        <file>images/form-qr.png</file>
+    </qresource>
 </RCC>

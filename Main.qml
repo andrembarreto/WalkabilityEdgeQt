@@ -74,6 +74,17 @@ Window {
 
             JourneyFinishedScreen {
                 onFinished: {
+                    stack.push(evaluateJourneyScreen);
+                }
+            }
+        }
+
+        Component {
+            id: evaluateJourneyScreen
+
+            EvaluateJourneyScreen {
+                onFinished: {
+                    ScoreCalculatorViewModel.calculate();
                     stack.push(journeyResultScreen);
                 }
             }

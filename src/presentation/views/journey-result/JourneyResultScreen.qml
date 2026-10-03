@@ -49,7 +49,7 @@ Page {
             property int currentIndex: 0
             readonly property list<dimensionScoreViewModel> scores:
                 ScoreCalculatorViewModel.score.dimensionScores
-            property var currentScore:
+            property dimensionScoreViewModel currentScore:
                 scores[currentIndex]
 
             Label {
