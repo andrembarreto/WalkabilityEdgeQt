@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QPromise>
+#include <QSettings>
 
 namespace {
     QJsonObject positionToJson(const Position& position) {
@@ -53,7 +54,11 @@ QFuture<JourneyDispatchResult> JourneyDispatcher::execute(const Journey& journey
     return m_api->postJourney(journeyToJson(journey)).then(this, [](QVariant journeyID) {
         bool success = journeyID.isValid();
         if(success)
-            cache::putSavedJourneyID(journeyID.toString().toUtf8().constData());
+        {
+            QSettings settings;
+            settings.setValue("lastSavedJourneyId", journeyID.toString());
+            settings.sync();
+        }
         return JourneyDispatchResult{
             success,
             success ? "Enviado" : "Falha ao enviar"

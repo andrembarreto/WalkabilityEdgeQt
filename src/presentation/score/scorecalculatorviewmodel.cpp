@@ -1,9 +1,10 @@
 #include "scorecalculatorviewmodel.h"
 #include "src/application/score-calculator/scorecalculator.h"
 #include "src/infra/api/journey/journeyapi.h"
-#include "src/application/journey-cache/journeycache.h"
 #include "src/application/index-table/indextable.h"
 #include "src/application/utils/waitfor.h"
+
+#include <QSettings>
 
 namespace {
 
@@ -31,6 +32,12 @@ QList<dimensionScoreViewModel> extractDimensionScores(const QMap<QString, float>
     return res;
 }
 
+QString getLastSavedJourneyID()
+{
+    QSettings settings;
+    return settings.value("lastSavedJourneyId", "").toString();
+}
+
 }
 
 ScoreCalculatorViewModel::ScoreCalculatorViewModel(QObject *parent)
@@ -44,19 +51,18 @@ void ScoreCalculatorViewModel::calculate()
     m_status = Status::Calculating;
     emit statusChanged();
 
-    std::optional<std::string> savedID = cache::getSavedJourneyID();
-    if(!savedID.has_value())
+    const QString lastSavedJourneyId = getLastSavedJourneyID();
+    if(lastSavedJourneyId.isEmpty())
     {
         m_status = Status::Failed;
         emit statusChanged();
         return;
     }
-    QString idToCalculate = QString::fromStdString(savedID.value());
 
     auto api = new JourneyAPI(this);
     auto calculator = new ScoreCalculator(api, this);
 
-    calculator->execute(idToCalculate).then(this, [=](ScoreCalculationResult res) {
+    calculator->execute(lastSavedJourneyId).then(this, [=](ScoreCalculationResult res) {
         calculator->deleteLater();
         api->deleteLater();
         if(res.success)

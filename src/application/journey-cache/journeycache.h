@@ -5,22 +5,24 @@
 #include "src/domain/journey/position.h"
 #include "src/domain/journey/journey.h"
 
-#include <string>
 #include <optional>
 
-namespace cache {
+namespace cache::journey {
+
+namespace active {
+
+bool check();
+void init();
+void clear();
 
 /* Write operations */
-void putSavedJourneyID(const std::string& ID);
 void putPosition(const Position& pos);
 void putEvent(const Event& event);
 
-void resetJourney();
-void cleanJourney();
-
 /* Read operations */
-std::optional<Journey> getJourney();
-std::optional<std::string> getSavedJourneyID();
+std::optional<Journey> load();
+
+}
 
 }
 

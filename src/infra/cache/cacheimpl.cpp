@@ -6,7 +6,7 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
-namespace cache {
+namespace cache::journey {
 
 namespace {
 
@@ -46,14 +46,15 @@ QStringList readLines(const QString& fileName)
     return lines;
 }
 
+void deleteData()
+{
+    QFile::remove(cacheDirPath() + QDir::separator() + "route.csv");
+    QFile::remove(cacheDirPath() + QDir::separator() + "events.csv");
 }
 
-void putSavedJourneyID(const std::string& ID)
-{
-    QSettings settings;
-    settings.setValue("lastSavedJourneyId", QString::fromStdString(ID));
-    settings.sync();
 }
+
+namespace active {
 
 void putPosition(const Position& pos)
 {
@@ -74,37 +75,42 @@ void putEvent(const Event& event)
     appendLine("events.csv", line);
 }
 
-void resetJourney()
+void init()
 {
-    cleanJourney();
-
+    deleteData();
     QSettings settings;
     settings.setValue("activeJourney", true);
     settings.setValue("journeyStartTime", QDateTime::currentSecsSinceEpoch());
     settings.sync();
 }
 
-void cleanJourney()
+void clear()
 {
     QSettings settings;
     settings.setValue("activeJourney", false);
     settings.remove("journeyStartTime");
     settings.sync();
-
-    QFile::remove(cacheDirPath() + QDir::separator() + "route.csv");
-    QFile::remove(cacheDirPath() + QDir::separator() + "events.csv");
+    deleteData();
 }
 
-std::optional<Journey> getJourney()
+bool check()
 {
     QSettings settings;
-
     const QVariant isActive = settings.value("activeJourney", false);
-    if(!isActive.isValid() || !isActive.toBool())
+    return isActive.isValid() && isActive.toBool();
+}
+
+std::optional<Journey> load()
+{
+    if(!check())
+        return std::nullopt;
+
+    QSettings settings;
+    const QVariant journeyStartTime = settings.value("journeyStartTime");
+    if(!journeyStartTime.isValid() || !journeyStartTime.canConvert<long long>())
         return std::nullopt;
 
     Journey journey;
-    const QVariant journeyStartTime = settings.value("journeyStartTime");
     journey.elapsedTime = static_cast<int>(
         QDateTime::currentSecsSinceEpoch() - journeyStartTime.toLongLong()
     );
@@ -140,16 +146,5 @@ std::optional<Journey> getJourney()
 
     return journey;
 }
-
-std::optional<std::string> getSavedJourneyID()
-{
-    QSettings settings;
-    const QVariant value = settings.value("lastSavedJourneyId");
-    if(value.isValid() && value.canConvert<QString>())
-    {
-        return value.toString().toStdString();
-    }
-    return std::nullopt;
 }
-
 }

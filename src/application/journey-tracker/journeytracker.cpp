@@ -25,13 +25,16 @@ JourneyTracker::JourneyTracker(
         this, &JourneyTracker::onPositionUpdated
     );
 
-    auto ongoingJourney = cache::getJourney();
-    if(ongoingJourney.has_value())
+    if(cache::journey::active::check())
     {
-        m_timeOffset_s = ongoingJourney->elapsedTime;
-        m_journey = ongoingJourney;
-        m_journey->isActive = true;
-        startUpdates();
+        auto activeJourney = cache::journey::active::load();
+        if(activeJourney.has_value())
+        {
+            m_timeOffset_s = activeJourney->elapsedTime;
+            m_journey = activeJourney;
+            m_journey->isActive = true;
+            startUpdates();
+        }
     }
 }
 
@@ -52,7 +55,7 @@ void JourneyTracker::onPositionUpdated(const Position& pos)
 
     m_lastKnownPosition = pos;
     m_journey->route.push_back(pos);
-    cache::putPosition(pos);
+    cache::journey::active::putPosition(pos);
 }
 
 void JourneyTracker::startJourney()
@@ -63,7 +66,7 @@ void JourneyTracker::startJourney()
     m_journey = Journey();
     m_journey->isActive = true;
     emit journeyStateChanged();
-    cache::resetJourney();
+    cache::journey::active::init();
     startUpdates();
 }
 
@@ -87,7 +90,7 @@ void JourneyTracker::finishJourney()
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
     m_backgroundService->stop();
-    cache::cleanJourney();
+    cache::journey::active::clear();
 }
 
 void JourneyTracker::registerEvent(int eventID)
@@ -97,7 +100,7 @@ void JourneyTracker::registerEvent(int eventID)
 
     Event newEvent{eventID, m_lastKnownPosition.value()};
     m_journey->events.push_back(newEvent);
-    cache::putEvent(newEvent);
+    cache::journey::active::putEvent(newEvent);
 }
 
 bool JourneyTracker::journeyIsActive() const
