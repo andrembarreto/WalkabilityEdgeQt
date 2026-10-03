@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtCore
 
 import WalkabilityEdgeQt
 
@@ -33,7 +34,25 @@ Window {
 
         anchors.fill: parent
         anchors.margins: window.safeMargin
-        initialItem: JourneyViewModel.isActive ? journeyActiveScreen : journeyStartScreen
+        initialItem: JourneyViewModel.canResume()
+                     ? resumeJourneyScreen
+                     : journeyStartScreen
+
+        Component {
+            id: resumeJourneyScreen
+
+            ResumeJourneyScreen {
+                onAccepted: {
+                    JourneyViewModel.resume();
+                    stack.replace(journeyStartScreen);
+                    stack.push(journeyActiveScreen);
+                }
+                onRejected: {
+                    JourneyViewModel.discard();
+                    stack.replace(journeyStartScreen);
+                }
+            }
+        }
 
         Component {
             id: journeyStartScreen

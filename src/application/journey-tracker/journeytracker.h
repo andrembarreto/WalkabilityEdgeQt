@@ -22,12 +22,15 @@ public:
     );
 
     void startJourney();
+    void resumeJourney();
     void finishJourney();
+    void discardJourney();
     void registerEvent(int eventID);
 
     bool journeyIsActive() const;
     int elapsedTime() const;
     const std::optional<Journey>& journey() const;
+    bool canResumeJourney() const;
 
 signals:
     void journeyStateChanged();

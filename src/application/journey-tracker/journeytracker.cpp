@@ -4,6 +4,8 @@
 #include "src/domain/journey/event.h"
 #include "src/application/journey-cache/journeycache.h"
 
+#include <QDebug>
+
 JourneyTracker::JourneyTracker(
     std::unique_ptr<IPositioningService> positioningService,
     std::unique_ptr<IBackgroundTrackingService> backgroundService,
@@ -24,18 +26,6 @@ JourneyTracker::JourneyTracker(
         m_positioningService.get(), &IPositioningService::updated,
         this, &JourneyTracker::onPositionUpdated
     );
-
-    if(cache::journey::active::check())
-    {
-        auto activeJourney = cache::journey::active::load();
-        if(activeJourney.has_value())
-        {
-            m_timeOffset_s = activeJourney->elapsedTime;
-            m_journey = activeJourney;
-            m_journey->isActive = true;
-            startUpdates();
-        }
-    }
 }
 
 void JourneyTracker::updateElapsedTime(int elapsed_ms)
@@ -70,6 +60,27 @@ void JourneyTracker::startJourney()
     startUpdates();
 }
 
+void JourneyTracker::resumeJourney()
+{
+    if(journeyIsActive())
+        return;
+    if(!canResumeJourney())
+    {
+        qWarning() << "Invalid attempt to resume journey";
+        return;
+    }
+    auto activeJourney = cache::journey::active::load();
+    if(!activeJourney.has_value())
+    {
+        qWarning() << "Cache miss when attempting to resume journey";
+        return;
+    }
+    m_timeOffset_s = activeJourney->elapsedTime;
+    m_journey = activeJourney;
+    m_journey->isActive = true;
+    startUpdates();
+}
+
 void JourneyTracker::startUpdates()
 {
     updateElapsedTime(0);
@@ -90,6 +101,15 @@ void JourneyTracker::finishJourney()
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
     m_backgroundService->stop();
+    cache::journey::active::clear();
+}
+
+void JourneyTracker::discardJourney()
+{
+    if(journeyIsActive())
+        finishJourney();
+
+    m_journey.reset();
     cache::journey::active::clear();
 }
 
@@ -116,4 +136,9 @@ int JourneyTracker::elapsedTime() const
 const std::optional<Journey>& JourneyTracker::journey() const
 {
     return m_journey;
+}
+
+bool JourneyTracker::canResumeJourney() const
+{
+    return cache::journey::active::check();
 }

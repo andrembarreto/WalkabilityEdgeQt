@@ -21,10 +21,13 @@ public:
     explicit JourneyViewModel(QObject *parent = nullptr);
 
     Q_INVOKABLE void start();
+    Q_INVOKABLE void resume();
     Q_INVOKABLE void finish();
+    Q_INVOKABLE void discard();
     Q_INVOKABLE void registerEvent(int eventID);
     Q_INVOKABLE void dispatch();
     Q_INVOKABLE journeyReportViewModel makeReport() const;
+    Q_INVOKABLE bool canResume() const;
 
     bool isActive() const;
     int elapsedTime() const;

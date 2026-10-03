@@ -27,9 +27,21 @@ void JourneyViewModel::start()
     m_tracker->startJourney();
 }
 
+void JourneyViewModel::resume()
+{
+    if(!canResume())
+        return;
+    m_tracker->resumeJourney();
+}
+
 void JourneyViewModel::finish()
 {
     m_tracker->finishJourney();
+}
+
+void JourneyViewModel::discard()
+{
+    m_tracker->discardJourney();
 }
 
 void JourneyViewModel::registerEvent(int eventID)
@@ -48,6 +60,11 @@ journeyReportViewModel JourneyViewModel::makeReport() const
     journeyReportViewModel report;
     report.totalDistance = 10;
     return report;
+}
+
+bool JourneyViewModel::canResume() const
+{
+    return m_tracker->canResumeJourney();
 }
 
 bool JourneyViewModel::isActive() const
