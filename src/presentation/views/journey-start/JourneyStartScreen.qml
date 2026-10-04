@@ -6,24 +6,50 @@ import WalkabilityEdgeQt
 
 Page {
     id: root
+
     signal started()
+    signal goToSavedJourneys()
 
     background: null
 
-    contentItem: ColumnLayout {
+    contentItem: Item {
+
         Label {
-            Layout.alignment: Qt.AlignHCenter
+            anchors {
+                top: parent.top
+                horizontalCenter: parent.horizontalCenter
+            }
+            padding: 12
             text: qsTr("Bem vindo(a)")
             color: "white"
             font.pointSize: 12
         }
 
         Button {
-            Layout.alignment: Qt.AlignHCenter
-            text: qsTr("Iniciar percurso")
+            id: buttonStart
+            anchors.centerIn: parent
+            icon.source: "qrc:/resources/icons/play-circle.svg"
+            icon.color: pressed ? "lightblue" : "white"
+            icon.width: 50
+            icon.height: 50
+            flat: true
             onClicked: {
                 JourneyViewModel.start();
                 root.started();
+            }
+        }
+
+        Button {
+            id: buttonSavedJourneys
+            anchors {
+                bottom: parent.bottom
+                horizontalCenter: parent.horizontalCenter
+            }
+            icon.source: "qrc:/resources/icons/folder-open.svg"
+            icon.color: pressed ? "lightblue" : "white"
+            flat: true
+            onClicked: {
+                root.goToSavedJourneys();
             }
         }
     }
