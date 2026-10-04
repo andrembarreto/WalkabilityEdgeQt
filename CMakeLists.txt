@@ -42,6 +42,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/presentation/views/journey-result/JourneyResultScreen.qml
         src/presentation/views/evaluate-journey/EvaluateJourneyScreen.qml
         src/presentation/views/resume-journey/ResumeJourneyScreen.qml
+        src/presentation/views/saved-journeys/SavedJourneysScreen.qml
+        src/presentation/views/saved-journeys/DeleteJourneyDialog.qml
     SOURCES
         src/presentation/journey/journeyviewmodel.h
         src/presentation/journey/journeyviewmodel.cpp
@@ -53,7 +55,6 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/application/utils/stopwatch.cpp
         src/presentation/journey/journeydispatcherviewmodel.h
         src/presentation/journey/journeydispatcherviewmodel.cpp
-
         src/presentation/score/scorecalculatorviewmodel.h
         src/presentation/score/scorecalculatorviewmodel.cpp
         src/presentation/score/scoreviewmodel.h
@@ -67,7 +68,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/infra/api/journey/journeyapi.h
         src/infra/api/journey/journeyapi.cpp
         src/infra/api/journey/mockjourneyapi.h
-        src/infra/cache/cacheimpl.cpp
+        src/infra/cache/activejourneycacheimpl.cpp
+        src/infra/cache/finishedjourneycacheimpl.cpp
         src/infra/api/index/indexapi.h
         src/infra/api/index/indexapi.cpp
         src/application/index-table/iindexapi.h

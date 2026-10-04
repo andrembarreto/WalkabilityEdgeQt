@@ -61,6 +61,19 @@ Window {
                 onStarted: {
                     stack.push(journeyActiveScreen);
                 }
+                onGoToSavedJourneys: {
+                    stack.push(savedJourneysScreen);
+                }
+            }
+        }
+
+        Component {
+            id: savedJourneysScreen
+
+            SavedJourneysScreen {
+                onFinished: {
+                    stack.pop();
+                }
             }
         }
 

@@ -6,6 +6,8 @@
 #include "src/domain/journey/journey.h"
 
 #include <optional>
+#include <QFuture>
+#include <QVector>
 
 namespace cache::journey {
 
@@ -15,12 +17,29 @@ bool check();
 void init();
 void clear();
 
-/* Write operations */
 void putPosition(const Position& pos);
 void putEvent(const Event& event);
 
-/* Read operations */
-std::optional<Journey> load();
+std::optional<Journey> get();
+
+}
+
+namespace finished {
+
+struct JourneyMetadata
+{
+
+};
+
+struct JourneyEntry
+{
+
+};
+
+void put(const Journey& journey);
+
+QFuture<QVector<JourneyMetadata>> get();
+QFuture<JourneyEntry> get(int id);
 
 }
 

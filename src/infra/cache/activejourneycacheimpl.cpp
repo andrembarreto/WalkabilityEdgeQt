@@ -6,7 +6,7 @@
 #include <QStandardPaths>
 #include <QTextStream>
 
-namespace cache::journey {
+namespace cache::journey::active {
 
 namespace {
 
@@ -54,8 +54,6 @@ void deleteData()
 
 }
 
-namespace active {
-
 void putPosition(const Position& pos)
 {
     const QString line = QString("%1,%2,%3")
@@ -100,7 +98,7 @@ bool check()
     return isActive.isValid() && isActive.toBool();
 }
 
-std::optional<Journey> load()
+std::optional<Journey> get()
 {
     if(!check())
         return std::nullopt;
@@ -145,6 +143,5 @@ std::optional<Journey> load()
     }
 
     return journey;
-}
 }
 }

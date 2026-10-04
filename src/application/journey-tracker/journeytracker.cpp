@@ -69,7 +69,7 @@ void JourneyTracker::resumeJourney()
         qWarning() << "Invalid attempt to resume journey";
         return;
     }
-    auto activeJourney = cache::journey::active::load();
+    auto activeJourney = cache::journey::active::get();
     if(!activeJourney.has_value())
     {
         qWarning() << "Cache miss when attempting to resume journey";
