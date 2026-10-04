@@ -26,6 +26,7 @@ target_include_directories(appWalkabilityEdgeQt PRIVATE
     src/presentation/index
     src/presentation/journey
     src/presentation/score
+    src/presentation/saved-journeys
 )
 
 qt_add_qml_module(appWalkabilityEdgeQt
@@ -78,6 +79,8 @@ qt_add_qml_module(appWalkabilityEdgeQt
         src/application/index-table/tableitems.h
         src/application/utils/waitfor.h
         src/presentation/index/indexparametersviewmodels.h
+        src/presentation/saved-journeys/savedjourneysviewmodel.h
+        src/presentation/saved-journeys/savedjourneysviewmodel.cpp
         src/infra/api/common/apiutils.h
         src/infra/api/common/apiutils.cpp
         src/application/journey-dispatcher/journeydispatcher.h
