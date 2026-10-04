@@ -9,6 +9,9 @@ Page {
 
     signal finished()
 
+    // Id do percurso no cache de finalizados. Sem ele, usa o ultimo percurso enviado
+    property int journeyID: -1
+
     background: null
 
     contentItem: StackLayout {
@@ -32,7 +35,7 @@ Page {
                 anchors.centerIn: parent
                 text: qsTr("Calcular pontuação")
                 onClicked: {
-                    ScoreCalculatorViewModel.calculate();
+                    ScoreCalculatorViewModel.calculate(root.journeyID);
                 }
             }
         }
@@ -177,7 +180,7 @@ Page {
                         id: retryButton
                         icon.source: "qrc:/resources/icons/replay.svg"
                         onClicked: {
-                            ScoreCalculatorViewModel.calculate();
+                            ScoreCalculatorViewModel.calculate(root.journeyID);
                         }
                     }
                 }

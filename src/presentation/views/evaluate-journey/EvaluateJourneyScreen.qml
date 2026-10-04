@@ -7,6 +7,9 @@ Page {
 
     signal finished()
 
+    // Id do percurso no cache de finalizados. Sem ele, avalia o ultimo percurso enviado
+    property int journeyID: -1
+
     background: null
     padding: 12
 

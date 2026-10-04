@@ -2,16 +2,34 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import WalkabilityEdgeQt
+
 Page {
     id: root
 
+    signal dispatchRequested(journeyID: int)
     signal evalRequested(journeyID: int)
     signal deleteRequested(journeyID: int)
     signal finished()
 
-    readonly property int highlightedJourneyID: 1
+    property int currentIndex: 0
+    readonly property list<savedJourneyViewModel> journeys: SavedJourneysViewModel.journeys
+    readonly property bool hasJourneys: journeys.length > 0
+    property savedJourneyViewModel currentJourney: journeys[currentIndex]
 
     background: null
+
+    StackView.onActivated: {
+        SavedJourneysViewModel.fetch();
+    }
+
+    Connections {
+        target: SavedJourneysViewModel
+
+        function onJourneysChanged() {
+            root.currentIndex = Math.max(0, Math.min(root.currentIndex, root.journeys.length - 1));
+        }
+    }
 
     contentItem: Item {
 
@@ -40,11 +58,20 @@ Page {
                     icon.color: pressed ? "lightblue" : "white"
                     icon.width: 20
                     flat: true
+                    enabled: root.journeys.length > 1
+                    onClicked: {
+                        root.currentIndex =
+                                (root.currentIndex - 1 + root.journeys.length)
+                                % root.journeys.length;
+                    }
                 }
 
                 Label {
+                    id: labelInfo
                     Layout.fillWidth: true
-                    text: qsTr("Sábado, 03/10/26<br>Início às 21:30:55<br>15 minutos")
+                    text: root.hasJourneys
+                          ? root.formatInfo(root.currentJourney)
+                          : qsTr("Nenhuma jornada salva")
                     horizontalAlignment: Text.AlignHCenter
                     font.pointSize: 8
                     color: "white"
@@ -57,6 +84,12 @@ Page {
                     icon.color: pressed ? "lightblue" : "white"
                     icon.width: 20
                     flat: true
+                    enabled: root.journeys.length > 1
+                    onClicked: {
+                        root.currentIndex =
+                                (root.currentIndex + 1)
+                                % root.journeys.length;
+                    }
                 }
             }
 
@@ -68,6 +101,7 @@ Page {
                     icon.source: "qrc:/resources/icons/delete.svg"
                     icon.color: pressed ? "lightblue" : "white"
                     flat: true
+                    enabled: root.hasJourneys
                     onPressAndHold: {
                         deleteDialog.open();
                     }
@@ -78,12 +112,35 @@ Page {
                     icon.source: "qrc:/resources/icons/reviews.svg"
                     icon.color: pressed ? "lightblue" : "white"
                     flat: true
+                    enabled: root.hasJourneys
                     onClicked: {
-                        root.evalRequested(root.highlightedJourneyID);
+                        if(!root.currentJourney.dispatched)
+                            root.dispatchRequested(root.currentJourney.id);
+                        else
+                            root.evalRequested(root.currentJourney.id);
                     }
                 }
             }
         }
+    }
+
+    function formatDuration(seconds: int): string {
+        if(seconds < 60)
+            return qsTr("%1 segundos").arg(seconds);
+
+        const minutes = Math.floor(seconds / 60);
+        return minutes === 1 ? qsTr("1 minuto") : qsTr("%1 minutos").arg(minutes);
+    }
+
+    function formatInfo(journey: savedJourneyViewModel): string {
+        const locale = Qt.locale("pt_BR");
+        const day = journey.date.toLocaleDateString(locale, "dddd, dd/MM/yy");
+        const time = journey.date.toLocaleTimeString(locale, "HH:mm:ss");
+
+        return "%1<br>%2<br>%3"
+            .arg(day.charAt(0).toUpperCase() + day.slice(1))
+            .arg(qsTr("Início às %1").arg(time))
+            .arg(formatDuration(journey.duration_s));
     }
 
     DeleteJourneyDialog {
@@ -93,7 +150,7 @@ Page {
         width: parent.width
 
         onAccepted: {
-            root.deleteRequested(root.highlightedJourneyID);
+            root.deleteRequested(root.currentJourney.id);
         }
     }
 }

@@ -74,6 +74,15 @@ Window {
                 onFinished: {
                     stack.pop();
                 }
+                onDispatchRequested: function(journeyID) {
+                    stack.push(journeyFinishedScreen, { journeyID: journeyID });
+                }
+                onEvalRequested: function(journeyID) {
+                    stack.push(evaluateJourneyScreen, { journeyID: journeyID });
+                }
+                onDeleteRequested: function(journeyID) {
+                    // TODO: handle delete request
+                }
             }
         }
 
@@ -105,11 +114,15 @@ Window {
             id: journeyFinishedScreen
 
             JourneyFinishedScreen {
+                id: finishedScreen
                 onFinished: {
-                    stack.push(evaluateJourneyScreen);
+                    stack.push(evaluateJourneyScreen, { journeyID: finishedScreen.journeyID });
                 }
                 onDiscarded: {
                     stack.replace(journeyStartScreen);
+                }
+                onReturned: {
+                    stack.pop();
                 }
             }
         }
@@ -118,9 +131,10 @@ Window {
             id: evaluateJourneyScreen
 
             EvaluateJourneyScreen {
+                id: evaluateScreen
                 onFinished: {
-                    ScoreCalculatorViewModel.calculate();
-                    stack.push(journeyResultScreen);
+                    ScoreCalculatorViewModel.calculate(evaluateScreen.journeyID);
+                    stack.push(journeyResultScreen, { journeyID: evaluateScreen.journeyID });
                 }
             }
         }

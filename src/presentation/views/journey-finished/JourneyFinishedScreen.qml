@@ -10,8 +10,18 @@ Page {
 
     signal finished()
     signal discarded()
+    signal returned()
+
+    // Id do percurso no cache de finalizados. Sem ele, trata o percurso recem finalizado
+    property int journeyID: -1
+    readonly property bool isSaved: journeyID >= 0
 
     background: null
+
+    Component.onCompleted: {
+        if(root.isSaved)
+            JourneyViewModel.dispatchSaved(root.journeyID);
+    }
 
     Connections {
         target: JourneyViewModel.dispatcher
@@ -49,6 +59,7 @@ Page {
 
                     Button {
                         id: buttonDiscard
+                        visible: !root.isSaved
                         icon.source: "qrc:/resources/icons/delete.svg"
                         onPressAndHold: {
                             JourneyViewModel.discard();
@@ -57,10 +68,22 @@ Page {
                     }
 
                     Button {
+                        id: buttonReturn
+                        visible: root.isSaved
+                        icon.source: "qrc:/resources/icons/chevron-backward.svg"
+                        onClicked: {
+                            root.returned();
+                        }
+                    }
+
+                    Button {
                         id: buttonSave
                         icon.source: "qrc:/resources/icons/save.svg"
                         onClicked: {
-                            JourneyViewModel.dispatch();
+                            if(root.isSaved)
+                                JourneyViewModel.dispatchSaved(root.journeyID);
+                            else
+                                JourneyViewModel.dispatch();
                         }
                     }
                 }
