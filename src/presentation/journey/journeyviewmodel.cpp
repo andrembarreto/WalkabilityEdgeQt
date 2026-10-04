@@ -73,6 +73,11 @@ void JourneyViewModel::dispatchSaved(int journeyID)
     });
 }
 
+void JourneyViewModel::removeSaved(int journeyID)
+{
+    fcache::remove(journeyID);
+}
+
 bool JourneyViewModel::canResume() const
 {
     return m_tracker->canResumeJourney();

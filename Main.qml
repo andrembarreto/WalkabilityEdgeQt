@@ -81,7 +81,7 @@ Window {
                     stack.push(evaluateJourneyScreen, { journeyID: journeyID });
                 }
                 onDeleteRequested: function(journeyID) {
-                    // TODO: handle delete request
+                    JourneyViewModel.removeSaved(journeyID);
                 }
             }
         }
