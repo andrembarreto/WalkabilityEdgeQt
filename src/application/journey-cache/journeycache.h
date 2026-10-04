@@ -28,18 +28,24 @@ namespace finished {
 
 struct JourneyMetadata
 {
-
+    qint64 id;
+    long long initTimestamp_s;
+    int duration_s;
+    bool dispatched;
+    std::optional<QString> dispatchedResourceId;
 };
 
 struct JourneyEntry
 {
-
+    JourneyMetadata metadata;
+    Journey journey;
 };
 
 void put(const Journey& journey);
+void setDispatched(qint64 id, const QString& resourceId);
 
 QFuture<QVector<JourneyMetadata>> get();
-QFuture<JourneyEntry> get(int id);
+QFuture<std::optional<JourneyEntry>> get(qint64 id);
 
 }
 

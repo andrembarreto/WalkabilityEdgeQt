@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <optional>
 
 #include "src/domain/journey/journey.h"
 
@@ -16,7 +17,7 @@ class JourneyDispatcherViewModel : public QObject
 public:
     explicit JourneyDispatcherViewModel(QObject *parent = nullptr);
 
-    void execute(const Journey& journey);
+    void execute(const Journey& journey, std::optional<qint64> cachedId = std::nullopt);
     bool isExecuting() const { return m_isExecuting; }
 
 signals:

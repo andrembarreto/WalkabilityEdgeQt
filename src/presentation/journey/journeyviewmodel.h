@@ -26,6 +26,7 @@ public:
     Q_INVOKABLE void discard();
     Q_INVOKABLE void registerEvent(int eventID);
     Q_INVOKABLE void dispatch();
+    Q_INVOKABLE void dispatchSaved(int journeyID);
     Q_INVOKABLE bool canResume() const;
 
     bool isActive() const;

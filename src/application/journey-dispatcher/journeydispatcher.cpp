@@ -49,19 +49,27 @@ JourneyDispatcher::JourneyDispatcher(IJourneyAPI* api, QObject *parent)
     , m_api(api)
 {}
 
-QFuture<JourneyDispatchResult> JourneyDispatcher::execute(const Journey& journey)
+QFuture<JourneyDispatchResult> JourneyDispatcher::execute(
+    const Journey& journey,
+    std::optional<qint64> cachedId
+)
 {
-    return m_api->postJourney(journeyToJson(journey)).then(this, [](QVariant journeyID) {
+    return m_api->postJourney(journeyToJson(journey)).then(this, [cachedId](QVariant journeyID) {
         bool success = journeyID.isValid();
+        const QString resourceId = success ? journeyID.toString() : QString();
         if(success)
         {
             QSettings settings;
-            settings.setValue("lastSavedJourneyId", journeyID.toString());
+            settings.setValue("lastSavedJourneyId", resourceId);
             settings.sync();
+
+            if(cachedId.has_value())
+                cache::journey::finished::setDispatched(cachedId.value(), resourceId);
         }
         return JourneyDispatchResult{
             success,
-            success ? "Enviado" : "Falha ao enviar"
+            success ? "Enviado" : "Falha ao enviar",
+            resourceId
         };
     });
 }

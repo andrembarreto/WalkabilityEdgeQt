@@ -8,6 +8,7 @@ struct JourneyDispatchResult
 {
     bool success;
     QString details;
+    QString resourceId;
 };
 
 Q_DECLARE_METATYPE(JourneyDispatchResult)

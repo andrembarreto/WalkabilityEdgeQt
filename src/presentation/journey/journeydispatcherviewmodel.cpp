@@ -7,13 +7,13 @@ JourneyDispatcherViewModel::JourneyDispatcherViewModel(QObject *parent)
     , m_isExecuting(false)
 {}
 
-void JourneyDispatcherViewModel::execute(const Journey& journey)
+void JourneyDispatcherViewModel::execute(const Journey& journey, std::optional<qint64> cachedId)
 {
     auto api = new JourneyAPI(this);
     auto dispatcher = new JourneyDispatcher(api, this);
     m_isExecuting = true;
     emit isExecutingChanged();
-    dispatcher->execute(journey).then(this, [=](JourneyDispatchResult res){
+    dispatcher->execute(journey, cachedId).then(this, [=](JourneyDispatchResult res){
         dispatcher->deleteLater();
         api->deleteLater();
         if(res.success)
