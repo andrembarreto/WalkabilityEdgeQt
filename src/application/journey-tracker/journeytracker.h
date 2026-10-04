@@ -30,6 +30,7 @@ public:
     bool journeyIsActive() const;
     int elapsedTime() const;
     const std::optional<Journey>& journey() const;
+    std::optional<qint64> finishedJourneyId() const;
     bool canResumeJourney() const;
 
 signals:
@@ -42,6 +43,7 @@ private slots:
 
 private:
     std::optional<Journey> m_journey;
+    std::optional<qint64> m_finishedJourneyId;
     std::optional<Position> m_lastKnownPosition;
     Stopwatch* const m_stopwatch;
     std::unique_ptr<IPositioningService> m_positioningService;
@@ -49,6 +51,7 @@ private:
     int m_timeOffset_s;
 
     void startUpdates();
+    void stopUpdates();
 };
 
 #endif // JOURNEYTRACKER_H

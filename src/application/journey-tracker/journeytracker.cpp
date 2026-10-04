@@ -55,6 +55,7 @@ void JourneyTracker::startJourney()
 
     m_journey = Journey();
     m_journey->isActive = true;
+    m_finishedJourneyId.reset();
     emit journeyStateChanged();
     cache::journey::active::init();
     startUpdates();
@@ -78,6 +79,7 @@ void JourneyTracker::resumeJourney()
     m_timeOffset_s = activeJourney->elapsedTime;
     m_journey = activeJourney;
     m_journey->isActive = true;
+    m_finishedJourneyId.reset();
     startUpdates();
 }
 
@@ -90,25 +92,35 @@ void JourneyTracker::startUpdates()
     m_backgroundService->start();
 }
 
-void JourneyTracker::finishJourney()
+void JourneyTracker::stopUpdates()
 {
-    if(!journeyIsActive())
-        return;
-
     m_journey->isActive = false;
     emit journeyStateChanged();
     m_timeOffset_s = 0;
     m_stopwatch->stop();
     m_positioningService->stopUpdates();
     m_backgroundService->stop();
+}
+
+void JourneyTracker::finishJourney()
+{
+    if(!journeyIsActive())
+        return;
+
+    stopUpdates();
+    m_finishedJourneyId = cache::journey::finished::put(m_journey.value());
     cache::journey::active::clear();
 }
 
 void JourneyTracker::discardJourney()
 {
     if(journeyIsActive())
-        finishJourney();
+        stopUpdates();
 
+    if(m_finishedJourneyId.has_value())
+        cache::journey::finished::remove(m_finishedJourneyId.value());
+
+    m_finishedJourneyId.reset();
     m_journey.reset();
     cache::journey::active::clear();
 }
@@ -136,6 +148,11 @@ int JourneyTracker::elapsedTime() const
 const std::optional<Journey>& JourneyTracker::journey() const
 {
     return m_journey;
+}
+
+std::optional<qint64> JourneyTracker::finishedJourneyId() const
+{
+    return m_finishedJourneyId;
 }
 
 bool JourneyTracker::canResumeJourney() const

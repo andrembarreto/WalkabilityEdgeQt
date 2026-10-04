@@ -58,7 +58,7 @@ void JourneyViewModel::registerEvent(int eventID)
 void JourneyViewModel::dispatch()
 {
     if(m_tracker->journey().has_value())
-        m_dispatcher->execute(m_tracker->journey().value());
+        m_dispatcher->execute(m_tracker->journey().value(), m_tracker->finishedJourneyId());
 }
 
 void JourneyViewModel::dispatchSaved(int journeyID)
