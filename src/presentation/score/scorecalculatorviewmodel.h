@@ -26,7 +26,7 @@ public:
 
     explicit ScoreCalculatorViewModel(QObject *parent = nullptr);
 
-    Q_INVOKABLE void calculate();
+    Q_INVOKABLE void calculate(int journeyID = -1);
     Status status() const { return m_status; }
     scoreViewModel score() const { return m_score; }
 
@@ -37,6 +37,8 @@ signals:
 private:
     Status m_status;
     scoreViewModel m_score;
+
+    void calculateFor(const QString& resourceId);
 };
 
 #endif // SCORECALCULATORVIEWMODEL_H

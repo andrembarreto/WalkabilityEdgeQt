@@ -3,10 +3,13 @@
 #include "src/infra/api/journey/journeyapi.h"
 #include "src/application/index-table/indextable.h"
 #include "src/application/utils/waitfor.h"
+#include "src/application/journey-cache/journeycache.h"
 
 #include <QSettings>
 
 namespace {
+
+namespace fcache = cache::journey::finished;
 
 QString getDimensionNameByID(const QVector<DimensionItem>& dimensions, int id)
 {
@@ -46,13 +49,27 @@ ScoreCalculatorViewModel::ScoreCalculatorViewModel(QObject *parent)
     , m_score({0.0, {}})
 {}
 
-void ScoreCalculatorViewModel::calculate()
+void ScoreCalculatorViewModel::calculate(int journeyID)
 {
     m_status = Status::Calculating;
     emit statusChanged();
 
-    const QString lastSavedJourneyId = getLastSavedJourneyID();
-    if(lastSavedJourneyId.isEmpty())
+    if(journeyID < 0)
+    {
+        calculateFor(getLastSavedJourneyID());
+        return;
+    }
+
+    fcache::get(journeyID).then(this, [this](std::optional<fcache::JourneyEntry> entry) {
+        calculateFor(entry.has_value()
+                         ? entry->metadata.dispatchedResourceId.value_or(QString())
+                         : QString());
+    });
+}
+
+void ScoreCalculatorViewModel::calculateFor(const QString& resourceId)
+{
+    if(resourceId.isEmpty())
     {
         m_status = Status::Failed;
         emit statusChanged();
@@ -62,7 +79,7 @@ void ScoreCalculatorViewModel::calculate()
     auto api = new JourneyAPI(this);
     auto calculator = new ScoreCalculator(api, this);
 
-    calculator->execute(lastSavedJourneyId).then(this, [=](ScoreCalculationResult res) {
+    calculator->execute(resourceId).then(this, [=](ScoreCalculationResult res) {
         calculator->deleteLater();
         api->deleteLater();
         if(res.success)
