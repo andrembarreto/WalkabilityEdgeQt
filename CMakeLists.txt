@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 project(WalkabilityEdgeQt VERSION 1.0 LANGUAGES CXX)
 
-find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Positioning)
+find_package(Qt6 6.8 REQUIRED COMPONENTS Quick Positioning Sql)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
@@ -99,11 +99,13 @@ qt_add_qml_module(appWalkabilityEdgeQt
 
 # Linkar Qt6::Positioning e o que faz o androiddeployqt descobrir a dependencia
 # Android do modulo: sem isso nem o plugin de posicao nem a permissao de
-# localizacao entram no APK.
+# localizacao entram no APK. O mesmo vale para Qt6::Sql e o plugin qsqlite,
+# usado pelo cache de percursos finalizados.
 target_link_libraries(appWalkabilityEdgeQt
     PRIVATE
         Qt6::Quick
         Qt6::Positioning
+        Qt6::Sql
 )
 
 # Configuracao Android / Wear OS.

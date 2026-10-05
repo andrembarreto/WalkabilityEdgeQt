@@ -41,7 +41,8 @@ struct JourneyEntry
     Journey journey;
 };
 
-void put(const Journey& journey);
+qint64 put(const Journey& journey);
+void remove(qint64 id);
 void setDispatched(qint64 id, const QString& resourceId);
 
 QFuture<QVector<JourneyMetadata>> get();
