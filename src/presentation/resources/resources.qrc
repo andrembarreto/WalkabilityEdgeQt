@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>icons/chevron-forward.svg</file>
+        <file>icons/chevron-backward.svg</file>
+        <file>icons/shield.svg</file>
+        <file>icons/route.svg</file>
+        <file>icons/replay.svg</file>
+        <file>icons/pin-drop.svg</file>
+        <file>icons/pending-actions.svg</file>
+        <file>icons/nature-people.svg</file>
+        <file>icons/home.svg</file>
+        <file>icons/save.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/reviews.svg</file>
+        <file>icons/folder-open.svg</file>
+        <file>icons/play-circle.svg</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>images/form-qr.png</file>
+    </qresource>
+</RCC>

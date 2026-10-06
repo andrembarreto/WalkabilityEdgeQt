@@ -1,4 +1,8 @@
 import QtQuick
+import QtQuick.Controls
+import QtCore
+
+import WalkabilityEdgeQt
 
 Window {
     id: window
@@ -6,6 +10,8 @@ Window {
     visible: true
     visibility: Window.FullScreen
     title: qsTr("Caminhabilidade")
+
+    required property list<journeyDimensionViewModel> dimensions
 
     // Fundo preto: padrao em telas OLED de relogio e economiza bateria.
     color: "black"
@@ -23,31 +29,124 @@ Window {
     // Use para conteudo que precise dessa garantia estrita.
     readonly property real inscribedMargin: displaySize * (1.0 - 1.0 / Math.sqrt(2.0)) / 2.0
 
-    // Area util da interface. O conteudo da aplicacao entra aqui dentro.
-    Item {
-        id: safeArea
+    StackView {
+        id: stack
 
         anchors.fill: parent
         anchors.margins: window.safeMargin
-    }
+        initialItem: JourneyViewModel.canResume()
+                     ? resumeJourneyScreen
+                     : journeyStartScreen
 
-    // --- Auxilio de desenvolvimento: apagar ao comecar a interface. ---------
-    // Contornos das duas referencias de margem, para conferir no aparelho o que
-    // realmente cabe na tela redonda.
-    Rectangle {
-        anchors.fill: safeArea
-        color: "transparent"
-        border.color: "#3affffff"
-        border.width: 1
-        radius: width / 2
-    }
+        Component {
+            id: resumeJourneyScreen
 
-    Rectangle {
-        anchors.centerIn: parent
-        width: window.displaySize - 2 * window.inscribedMargin
-        height: width
-        color: "transparent"
-        border.color: "#3a4fc3f7"
-        border.width: 1
+            ResumeJourneyScreen {
+                onAccepted: {
+                    JourneyViewModel.resume();
+                    stack.replace(journeyStartScreen);
+                    stack.push(journeyActiveScreen);
+                }
+                onRejected: {
+                    JourneyViewModel.discard();
+                    stack.replace(journeyStartScreen);
+                }
+            }
+        }
+
+        Component {
+            id: journeyStartScreen
+
+            JourneyStartScreen {
+                onStarted: {
+                    stack.push(journeyActiveScreen);
+                }
+                onGoToSavedJourneys: {
+                    stack.push(savedJourneysScreen);
+                }
+            }
+        }
+
+        Component {
+            id: savedJourneysScreen
+
+            SavedJourneysScreen {
+                onFinished: {
+                    stack.pop();
+                }
+                onDispatchRequested: function(journeyID) {
+                    stack.push(journeyFinishedScreen, { journeyID: journeyID });
+                }
+                onEvalRequested: function(journeyID) {
+                    stack.push(evaluateJourneyScreen, { journeyID: journeyID });
+                }
+                onDeleteRequested: function(journeyID) {
+                    JourneyViewModel.removeSaved(journeyID);
+                }
+            }
+        }
+
+        Component {
+            id: journeyActiveScreen
+
+            JourneyActiveScreen {
+                dimensions: window.dimensions
+                onDimensionSelected: function(dimension) {
+                    stack.push(journeyEventsScreen, { events: dimension.events });
+                }
+                onFinished: {
+                    stack.replace(journeyFinishedScreen);
+                }
+            }
+        }
+
+        Component {
+            id: journeyEventsScreen
+
+            JourneyEventsScreen {
+                onReturned: {
+                    stack.pop();
+                }
+            }
+        }
+
+        Component {
+            id: journeyFinishedScreen
+
+            JourneyFinishedScreen {
+                id: finishedScreen
+                onFinished: {
+                    stack.push(evaluateJourneyScreen, { journeyID: finishedScreen.journeyID });
+                }
+                onDiscarded: {
+                    stack.replace(journeyStartScreen);
+                }
+                onReturned: {
+                    stack.pop();
+                }
+            }
+        }
+
+        Component {
+            id: evaluateJourneyScreen
+
+            EvaluateJourneyScreen {
+                id: evaluateScreen
+                onFinished: {
+                    ScoreCalculatorViewModel.calculate(evaluateScreen.journeyID);
+                    stack.push(journeyResultScreen, { journeyID: evaluateScreen.journeyID });
+                }
+            }
+        }
+
+        Component {
+            id: journeyResultScreen
+
+            JourneyResultScreen {
+                onFinished: {
+                    stack.replace(journeyStartScreen);
+                }
+            }
+        }
     }
 }

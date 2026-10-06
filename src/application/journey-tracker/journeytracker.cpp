@@ -1,0 +1,161 @@
+#include "journeytracker.h"
+#include "src/application/utils/stopwatch.h"
+#include "src/domain/journey/ipositioningservice.h"
+#include "src/domain/journey/event.h"
+#include "src/application/journey-cache/journeycache.h"
+
+#include <QDebug>
+
+JourneyTracker::JourneyTracker(
+    std::unique_ptr<IPositioningService> positioningService,
+    std::unique_ptr<IBackgroundTrackingService> backgroundService,
+    QObject *parent
+)
+    : QObject{parent}
+    , m_stopwatch(new Stopwatch(this))
+    , m_positioningService(std::move(positioningService))
+    , m_backgroundService(std::move(backgroundService))
+    , m_timeOffset_s(0)
+{
+    connect(
+        m_stopwatch, &Stopwatch::updated,
+        this, &JourneyTracker::updateElapsedTime
+    );
+
+    connect(
+        m_positioningService.get(), &IPositioningService::updated,
+        this, &JourneyTracker::onPositionUpdated
+    );
+}
+
+void JourneyTracker::updateElapsedTime(int elapsed_ms)
+{
+    if(!journeyIsActive())
+        return;
+
+    int elapsed_s = (elapsed_ms / 1000) + m_timeOffset_s;
+    m_journey->elapsedTime = elapsed_s;
+    emit elapsedTimeChanged();
+}
+
+void JourneyTracker::onPositionUpdated(const Position& pos)
+{
+    if(!journeyIsActive() || m_lastKnownPosition == pos)
+        return;
+
+    m_lastKnownPosition = pos;
+    m_journey->route.push_back(pos);
+    cache::journey::active::putPosition(pos);
+}
+
+void JourneyTracker::startJourney()
+{
+    if(journeyIsActive())
+        return;
+
+    m_journey = Journey();
+    m_journey->isActive = true;
+    m_finishedJourneyId.reset();
+    emit journeyStateChanged();
+    cache::journey::active::init();
+    startUpdates();
+}
+
+void JourneyTracker::resumeJourney()
+{
+    if(journeyIsActive())
+        return;
+    if(!canResumeJourney())
+    {
+        qWarning() << "Invalid attempt to resume journey";
+        return;
+    }
+    auto activeJourney = cache::journey::active::get();
+    if(!activeJourney.has_value())
+    {
+        qWarning() << "Cache miss when attempting to resume journey";
+        return;
+    }
+    m_timeOffset_s = activeJourney->elapsedTime;
+    m_journey = activeJourney;
+    m_journey->isActive = true;
+    m_finishedJourneyId.reset();
+    startUpdates();
+}
+
+void JourneyTracker::startUpdates()
+{
+    updateElapsedTime(0);
+    m_stopwatch->start();
+    m_lastKnownPosition.reset();
+    m_positioningService->startUpdates(1000);
+    m_backgroundService->start();
+}
+
+void JourneyTracker::stopUpdates()
+{
+    m_journey->isActive = false;
+    emit journeyStateChanged();
+    m_timeOffset_s = 0;
+    m_stopwatch->stop();
+    m_positioningService->stopUpdates();
+    m_backgroundService->stop();
+}
+
+void JourneyTracker::finishJourney()
+{
+    if(!journeyIsActive())
+        return;
+
+    stopUpdates();
+    m_finishedJourneyId = cache::journey::finished::put(m_journey.value());
+    cache::journey::active::clear();
+}
+
+void JourneyTracker::discardJourney()
+{
+    if(journeyIsActive())
+        stopUpdates();
+
+    if(m_finishedJourneyId.has_value())
+        cache::journey::finished::remove(m_finishedJourneyId.value());
+
+    m_finishedJourneyId.reset();
+    m_journey.reset();
+    cache::journey::active::clear();
+}
+
+void JourneyTracker::registerEvent(int eventID)
+{
+    if(!journeyIsActive() || !m_lastKnownPosition.has_value())
+        return;
+
+    Event newEvent{eventID, m_lastKnownPosition.value()};
+    m_journey->events.push_back(newEvent);
+    cache::journey::active::putEvent(newEvent);
+}
+
+bool JourneyTracker::journeyIsActive() const
+{
+    return m_journey.has_value() && m_journey->isActive;
+}
+
+int JourneyTracker::elapsedTime() const
+{
+    return journeyIsActive() ? m_journey->elapsedTime : 0;
+}
+
+const std::optional<Journey>& JourneyTracker::journey() const
+{
+    return m_journey;
+}
+
+std::optional<qint64> JourneyTracker::finishedJourneyId() const
+{
+    return m_finishedJourneyId;
+}
+
+bool JourneyTracker::canResumeJourney() const
+{
+    return cache::journey::active::check();
+}
